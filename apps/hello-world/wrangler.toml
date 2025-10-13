@@ -1,0 +1,26 @@
+# Cloudflare Pages configuration for hello-world app
+
+name = "gongjam-hello-world"
+compatibility_date = "2024-01-01"
+
+# Pages configuration
+pages_build_output_dir = "dist"
+
+# Custom domain configuration
+# After deploying, configure custom domain in Cloudflare Dashboard:
+# Pages > gongjam-hello-world > Custom domains > Add custom domain
+# Domain: jeongwoo.in
+# Path: /hello
+
+[build]
+command = "pnpm build"
+cwd = ""
+
+[build.upload]
+format = "directory"
+dir = "dist"
+
+# Environment variables (if needed)
+[vars]
+# Add your environment variables here
+# EXAMPLE_VAR = "value"

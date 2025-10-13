@@ -1,0 +1,13 @@
+{
+  "name": "@gongjam/vite-config",
+  "version": "0.0.1",
+  "type": "module",
+  "main": "./base.ts",
+  "exports": {
+    ".": "./base.ts"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.2.1",
+    "vite": "^6.0.3"
+  }
+}
