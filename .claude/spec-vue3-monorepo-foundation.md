@@ -32,7 +32,7 @@
 ### 자동화 목표
 
 - 코드 품질 관리 (린트, 포매팅, 테스트, 타입체크) 전 과정 자동화
-- 환경별 배포 프로세스 (dev/staging/prod) 자동화
+- 환경별 배포 프로세스 (dev/prod) 자동화
 - Git Flow 기반 협업 워크플로우 자동화
 
 ## 🏗️ 기술 스택
@@ -45,6 +45,7 @@
 - **Package Manager**: pnpm
 - **배포**: CloudFlare Pages
 - **CI/CD**: GitHub Actions
+- **NodeJS버전**: v22.11.0
 
 ### 개발 도구
 
@@ -84,7 +85,7 @@
 
 - **팀 규모**: 3-4명 개발자
 - **Git 전략**: Git Flow
-- **브랜치 구조**: main, develop, feature/_, release/_, hotfix/\*
+- **브랜치 구조**: main, develop, feature/\_, hotfix/\*
 
 ### 품질 관리
 
@@ -178,7 +179,7 @@ finlab-www-ep/
 **목표**: 환경별 배포 프로세스 구축
 
 - CloudFlare Pages 프로젝트 연동
-- 환경별 배포 설정 (dev/staging/prod)
+- 환경별 배포 설정 (prod / dev)
 - 배포용 빌드 설정 최적화
 
 **작업 범위**:
@@ -264,9 +265,7 @@ finlab-www-ep/
 
 ### 추가 앱 구성 계획
 
-- 가설계 앱 추가
-- 시그널플로우 앱 추가
-  - 모바일 웹앱 추가
+- 자산분배 계산 앱 추가
 
 ### 공통 컴포넌트 확장
 

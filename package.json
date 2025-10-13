@@ -1,0 +1,26 @@
+{
+  "name": "gongjam-www",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "description": "Vue3 Monorepo Foundation for legacy Vue project migration",
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "lint": "turbo run lint",
+    "test": "turbo run test",
+    "type-check": "turbo run type-check",
+    "format": "prettier --write \"**/*.{ts,tsx,vue,js,jsx,json,md}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx,vue,js,jsx,json,md}\""
+  },
+  "devDependencies": {
+    "@turbo/gen": "^1.13.4",
+    "turbo": "^1.13.4",
+    "prettier": "^3.2.5"
+  },
+  "packageManager": "pnpm@8.15.6",
+  "engines": {
+    "node": ">=18.0.0",
+    "pnpm": ">=8.0.0"
+  }
+}
