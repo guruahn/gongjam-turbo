@@ -12,15 +12,12 @@
   3. feature 추가를 위해 구조 변경이 필요한지 여부
   4. 대략적인 작업 계획을 순서대로 정리해줘.
   5. 작업 단위는 서로 의존성이 없는 선에서 클로드코드가 한 세션에 해결할 수 있을 정도의 사이즈내로 쪼개줘.
-  6. feature 추가를 위한 준비가 끝나면 코딩을 시작하기 전에 .claude 폴더에 spec-{FEATURE_NAME}.md 형태로 문서로 남겨줘.
+  6. feature 추가를 위한 준비가 끝나면 코딩을 시작하기 전에 .claude 폴더에 spec-{yyyyMMdd}-{FEATURE_NAME}.md 형태로 문서로 남겨줘.
 - spec 문서를 작성 완료했다면 세션을 종료해.
 
 ## 추가전 참고문서
 
 - 프로젝트 구조: CLAUDE.md
-- 프로젝트 분석 리포트
-  - .claude/analysis-report.md
-  - .claude/codebase-analysis-report.md
 
 ## 기능정의 템플릿
 
@@ -53,3 +50,4 @@
 - 함수단위 테스트를 작성한다.
 - 엄격한 타이스크립트 적용.
 - 기존 feature에 영향이 없어야 한다.
+- 기능구현이 완료되면 CLAUDE.md 파일을 업뎃해야 한다.

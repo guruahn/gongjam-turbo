@@ -7,6 +7,9 @@
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev",
+    "dev:shell": "pnpm --filter _shell dev",
+    "dev:hello": "pnpm --filter hello-world dev",
+    "dev:all": "concurrently \"pnpm dev:shell\" \"pnpm dev:hello\" --names \"shell,hello\" --prefix-colors \"blue,green\"",
     "lint": "turbo run lint",
     "test": "turbo run test",
     "type-check": "turbo run type-check",
@@ -17,6 +20,7 @@
     "@turbo/gen": "^1.13.4",
     "@vitest/ui": "^3.2.4",
     "@vue/test-utils": "^2.4.6",
+    "concurrently": "^9.2.1",
     "happy-dom": "^20.0.0",
     "jsdom": "^27.0.0",
     "prettier": "^3.2.5",
