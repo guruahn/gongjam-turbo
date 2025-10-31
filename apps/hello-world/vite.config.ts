@@ -1,17 +1,19 @@
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
-import federation from '@originjs/vite-plugin-federation';
+import { federation } from '@module-federation/vite';
 
 export default defineConfig({
   plugins: [
     vue(),
     federation({
-      name: 'hello-world',
+      name: 'helloWorld',
       filename: 'remoteEntry.js',
       exposes: {
         './App': './src/App.vue',
       },
-      shared: ['vue'],
+      shared: {
+        vue: {},
+      },
     }),
   ],
   server: {

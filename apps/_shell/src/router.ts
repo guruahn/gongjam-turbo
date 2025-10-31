@@ -9,6 +9,10 @@ const routes: RouteRecordRaw[] = [
     path: '/hello',
     component: () => import('helloWorld/App'),
   },
+  {
+    path: '/home',
+    component: () => import('helloWorld/App'),
+  },
 ];
 
 export default routes;

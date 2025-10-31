@@ -259,5 +259,585 @@ wrangler pages deploy dist --project-name=gongjam-hello-world
 
 ---
 
-**최종 업데이트**: 2025-10-13
+## Phase 4: Module Federation 마이크로 아키텍처 ✅ (완료)
+
+**완료일**: 2025-10-14
+
+### 완료 항목
+
+#### 1. Shell 앱 구축 (`apps/_shell`)
+- ✅ Module Federation Host 앱 구조 생성
+- ✅ Vue Router 통합 (라우트 기반 앱 로드)
+- ✅ ShellLayout 컴포넌트 통합 (공통 레이아웃)
+- ✅ 환경변수 기반 Remote URL 관리
+- ✅ Vite Module Federation 플러그인 설정
+
+#### 2. Module Federation 설정
+- ✅ `@originjs/vite-plugin-federation` 패키지 통합
+- ✅ Shell 앱: Module Federation Host 설정
+  - `apps/_shell/vite.config.ts` - remotes 설정
+  - hello-world 앱을 `helloWorld` remote로 등록
+  - 공유 의존성: vue, vue-router
+- ✅ hello-world 앱: Module Federation Remote 설정
+  - `apps/hello-world/vite.config.ts` - exposes 설정
+  - App.vue를 `./App` 경로로 expose
+  - 포트 변경 (3000 → 3001)
+
+#### 3. 공통 레이아웃 컴포넌트
+- ✅ `packages/ui/src/ShellLayout.vue` 생성
+  - Header + Body 구조
+  - Tailwind CSS 스타일링
+  - Slot 기반 컨텐츠 주입
+- ✅ ShellLayout 단위 테스트 작성 및 통과
+- ✅ packages/ui에서 ShellLayout export
+
+#### 4. 라우팅 구조
+- ✅ Shell 앱 라우터 설정
+  - `/` → `/hello` 리다이렉트
+  - `/hello` → HelloPage.vue (Module Federation 로드)
+- ✅ HelloPage.vue 컴포넌트
+  - defineAsyncComponent로 hello-world 앱 동적 로드
+  - Suspense를 통한 로딩 상태 처리
+- ✅ HelloPage 통합 테스트 작성 및 통과
+
+#### 5. 개발 환경 설정
+- ✅ 병렬 실행 스크립트 구성
+  - `concurrently` 패키지 설치
+  - `dev:all` 스크립트 (Shell + hello-world 동시 실행)
+  - 로그 prefix 구분 ([shell], [hello])
+- ✅ 환경변수 파일 설정
+  - `.env.development` (로컬: localhost:3001)
+  - `.env.production` (배포: CloudFlare Pages URL)
+
+### 기술 스택 적용
+- **Module Federation**: @originjs/vite-plugin-federation 1.4.1
+- **Vue Router**: 4.4.5
+- **Concurrently**: 9.1.0 (병렬 실행)
+- **Vue3**: 3.5.13 (기존)
+- **TypeScript**: 5.6.3 (기존)
+- **Vite**: 6.0.3 (기존)
+
+### 검증 결과
+- ✅ `pnpm dev:all` 성공
+  - Shell 앱 (port 3000) + hello-world 앱 (port 3001) 동시 실행
+- ✅ `http://localhost:3000/hello` 접속 확인
+  - ShellLayout 헤더 렌더링
+  - hello-world 앱 Module Federation 로드 성공
+- ✅ hello-world 앱 독립 실행 유지
+  - `pnpm --filter hello-world dev` 정상 동작 (port 3001)
+- ✅ 모든 테스트 통과
+  - packages/ui: ShellLayout 테스트 통과
+  - apps/_shell: HelloPage 테스트 통과
+  - apps/hello-world: 기존 테스트 유지
+- ✅ TypeScript 타입 체크 통과
+- ✅ 빌드 성공 (`pnpm turbo build`)
+
+### 프로젝트 구조 (업데이트)
+```
+gongjam-www/
+├── apps/
+│   ├── _shell/                       # Shell 앱 (Module Federation Host)
+│   │   ├── src/
+│   │   │   ├── App.vue              # ShellLayout 사용
+│   │   │   ├── main.ts              # Vue + Router 초기화
+│   │   │   ├── router.ts            # /hello 라우트 설정
+│   │   │   ├── pages/
+│   │   │   │   └── HelloPage.vue    # hello-world federation 로드
+│   │   │   ├── __tests__/
+│   │   │   │   └── HelloPage.spec.ts
+│   │   │   └── style.css
+│   │   ├── .env.development         # 로컬 환경변수
+│   │   ├── .env.production          # 배포 환경변수
+│   │   ├── vite.config.ts           # Module Federation Host 설정
+│   │   ├── vitest.config.ts
+│   │   ├── package.json
+│   │   └── ...
+│   │
+│   └── hello-world/                  # Module Federation Remote 앱
+│       ├── vite.config.ts           # Module Federation Remote 설정
+│       ├── .env.development
+│       ├── .env.production
+│       └── ...
+│
+├── packages/
+│   ├── ui/
+│   │   ├── src/
+│   │   │   ├── Button.vue
+│   │   │   ├── ShellLayout.vue      # 공통 레이아웃 컴포넌트
+│   │   │   ├── __tests__/
+│   │   │   │   ├── Button.spec.ts
+│   │   │   │   └── ShellLayout.spec.ts
+│   │   │   └── index.ts             # ShellLayout export 추가
+│   │   └── ...
+│   └── ...
+│
+├── package.json                      # concurrently 추가, dev:all 스크립트
+└── turbo.json                        # _shell 앱 파이프라인 추가
+```
+
+### Module Federation 아키텍처
+```
+┌─────────────────────────────────────────┐
+│         apps/_shell (Host App)          │
+│         Port: 3000                      │
+│  ┌───────────────────────────────────┐  │
+│  │      ShellLayout.vue              │  │
+│  │  ┌─────────────────────────────┐  │  │
+│  │  │   Header (공통 레이아웃)      │  │  │
+│  │  └─────────────────────────────┘  │  │
+│  │  ┌─────────────────────────────┐  │  │
+│  │  │   Body (Router Outlet)      │  │  │
+│  │  │   ┌─────────────────────┐   │  │  │
+│  │  │   │  hello-world 앱     │   │  │  │
+│  │  │   │  (Remote Module)    │   │  │  │
+│  │  │   └─────────────────────┘   │  │  │
+│  │  └─────────────────────────────┘  │  │
+│  └───────────────────────────────────┘  │
+└─────────────────────────────────────────┘
+          ↓ (Module Federation)
+          ↓ remoteEntry.js
+┌─────────────────────────────────────────┐
+│    apps/hello-world (Remote App)        │
+│    Port: 3001                           │
+│  - Exposes: ./App (App.vue)             │
+│  - Independent Runtime ✓                │
+│  - Shared: vue                          │
+└─────────────────────────────────────────┘
+```
+
+### 주요 설정 파일
+
+#### `apps/_shell/vite.config.ts` (Host 설정)
+```typescript
+export default defineConfig(({ mode }) => {
+  const env = loadEnv(mode, process.cwd(), '');
+  const isDevelopment = mode === 'development';
+
+  return {
+    plugins: [
+      vue(),
+      federation({
+        name: 'shell',
+        remotes: {
+          helloWorld: !isDevelopment
+            ? `${env.VITE_HELLO_HOME_URL}/hello-world/assets/remoteEntry.js`
+            : 'http://localhost:3001/hello-world/assets/remoteEntry.js',
+        },
+        shared: ['vue', 'vue-router'],
+      }),
+    ],
+    server: { port: 3000 },
+  };
+});
+```
+
+#### `apps/hello-world/vite.config.ts` (Remote 설정)
+```typescript
+export default defineConfig({
+  plugins: [
+    vue(),
+    federation({
+      name: 'helloWorld',
+      filename: 'remoteEntry.js',
+      exposes: {
+        './App': './src/App.vue'
+      },
+      shared: ['vue']
+    })
+  ],
+  server: { port: 3001 }, // 포트 변경
+});
+```
+
+#### `apps/_shell/src/pages/HelloPage.vue`
+```vue
+<script setup lang="ts">
+import { defineAsyncComponent } from 'vue'
+
+const HelloWorldApp = defineAsyncComponent(
+  () => import('helloWorld/App')
+)
+</script>
+
+<template>
+  <div class="hello-page">
+    <Suspense>
+      <HelloWorldApp />
+    </Suspense>
+  </div>
+</template>
+```
+
+### 테스트 커버리지
+
+#### packages/ui/ShellLayout.vue
+- ✅ 헤더 렌더링 ("this is header")
+- ✅ 슬롯 컨텐츠 렌더링
+- ✅ CSS 클래스 적용 (min-h-screen, bg-blue-600)
+
+#### apps/_shell/HelloPage.vue
+- ✅ hello-page 컨테이너 렌더링
+- ✅ Suspense 컴포넌트 포함
+- ✅ Module Federation 로드 (mocked)
+
+### 해결한 기술적 이슈
+
+1. **Module Federation Remote URL 관리**
+   - 문제: 개발/배포 환경별 URL 관리 필요
+   - 해결: 환경변수 기반 동적 URL 설정
+     - Development: `http://localhost:3001`
+     - Production: `${VITE_HELLO_HOME_URL}`
+
+2. **타입 안전성 확보**
+   - 문제: Module Federation import에 TypeScript 타입 없음
+   - 해결: `vite-env.d.ts`에 타입 선언 추가
+   ```typescript
+   declare module 'helloWorld/App' {
+     import { DefineComponent } from 'vue'
+     const component: DefineComponent<{}, {}, any>
+     export default component
+   }
+   ```
+
+3. **독립 실행 유지**
+   - 문제: hello-world 앱이 Shell에만 의존하면 안됨
+   - 해결: Remote 설정만 추가하고 독립 실행 구조 유지
+   - 검증: `pnpm --filter hello-world dev` 정상 동작
+
+### 로컬 테스트 방법
+
+```bash
+# 1. 병렬 실행 (권장)
+pnpm dev:all
+# Shell (port 3000) + hello-world (port 3001) 동시 실행
+# http://localhost:3000/hello 접속
+
+# 2. 개별 실행
+# Terminal 1: hello-world 앱 (Remote)
+pnpm --filter hello-world dev
+
+# Terminal 2: Shell 앱 (Host)
+pnpm --filter _shell dev
+
+# 3. hello-world 독립 실행
+pnpm --filter hello-world dev
+# http://localhost:3001 접속
+```
+
+### 배포 전략
+
+#### CloudFlare Pages 배포 순서
+1. **hello-world 앱 먼저 배포** (Remote App)
+   ```bash
+   cd apps/hello-world
+   pnpm build
+   wrangler pages deploy dist --project-name=gongjam-hello-world
+   # remoteEntry.js 생성: /assets/remoteEntry.js
+   ```
+
+2. **_shell 앱 배포** (Host App)
+   ```bash
+   cd apps/_shell
+   pnpm build
+   wrangler pages deploy dist --project-name=gongjam-shell
+   ```
+
+3. **환경변수 설정** (CloudFlare Pages)
+   ```
+   VITE_HELLO_HOME_URL=https://gongjam-hello-world.pages.dev
+   ```
+
+#### 배포 URL 구조
+- **hello-world**: `https://gongjam-hello-world.pages.dev`
+- **Shell**: `https://gongjam-shell.pages.dev/hello`
+- **remoteEntry.js**: `https://gongjam-hello-world.pages.dev/assets/remoteEntry.js`
+
+### 향후 확장 계획
+- [ ] 추가 마이크로 앱 통합 (/dashboard, /admin)
+- [ ] 공통 네비게이션 메뉴 구현
+- [ ] 에러 바운더리 추가 (Remote 로드 실패 처리)
+- [ ] 성능 모니터링 (Module Federation 로드 시간)
+- [ ] CI/CD 자동 배포 파이프라인 구축
+
+---
+
+## Phase 5: 프로필 페이지 및 레이아웃 완성 ✅ (완료)
+
+**완료일**: 2025-10-31
+
+### 완료 항목
+
+#### 1. ShellLayout 전면 개선 (`packages/ui/src/ShellLayout.vue`)
+- ✅ **네비게이션 바 구현**
+  - 로고/타이틀: "Jeongwoo Ahn" (홈 링크)
+  - 메뉴: Hello, Blog, GuestBook (router-link 연결)
+  - 다크모드 토글 버튼 (moon ☀️/sun 🌙 아이콘)
+  - 모바일 반응형: 햄버거 메뉴 (☰/✕)
+  - 활성 라우트 하이라이트
+
+- ✅ **다크모드 시스템**
+  - localStorage 기반 테마 저장 (`theme: 'light' | 'dark'`)
+  - 시스템 선호도 자동 감지 (`prefers-color-scheme`)
+  - HTML 문서에 `dark` 클래스 토글
+  - 전역 적용 (모든 마이크로 앱에 영향)
+
+- ✅ **푸터 구현**
+  - 소셜 링크: GitHub 🐙, Email 📧
+  - 저작권 표시: "Copyright © 2025 • Jeongwoo Ahn"
+  - 중앙 정렬, 다크모드 스타일 지원
+
+#### 2. ProfileImage 컴포넌트 (`packages/ui/src/ProfileImage.vue`)
+- ✅ 새로운 공통 컴포넌트 생성
+  - Props: `size` (small/medium/large/custom), `customClass`
+  - 프로필 이미지 asset 통합 (`assets/my-face-transparent.png`)
+  - Tailwind CSS 기반 스타일링 (원형, 반응형 크기)
+  - TypeScript 타입 안전성 확보
+- ✅ `packages/ui/src/index.ts`에서 export
+- ✅ 다른 앱에서 재사용 가능 (`import { ProfileImage } from '@gongjam/ui'`)
+
+#### 3. hello-world 앱 프로필 페이지 전면 재구성
+- ✅ **App.vue 완전 개편**
+  - 기존: 단순 "Hello World" 텍스트와 버튼
+  - 신규: 전문적인 프로필/포트폴리오 페이지
+
+- ✅ **2열 반응형 레이아웃**
+  - Desktop (lg:): 3열 그리드 (1/3 프로필 카드 + 2/3 메인 콘텐츠)
+  - Mobile/Tablet: 1열 스택 레이아웃
+
+- ✅ **프로필 카드 (왼쪽 섹션)**
+  - ProfileImage 컴포넌트 통합 (large 사이즈, 140x140px)
+  - 이름: "Jeongwoo Ahn" (h1, 볼드)
+  - 직함: "Full Stack Developer"
+  - 연락처 정보:
+    * 📧 Email: guruahn@gmail.com (mailto 링크)
+    * 📍 Location: Seoul, South Korea
+    * 🐙 GitHub: github.com/guruahn (외부 링크)
+  - 카드 스타일: 흰색/회색 배경, 그림자, 둥근 모서리
+  - sticky positioning (상단 고정)
+
+- ✅ **메인 콘텐츠 (오른쪽 섹션)**
+  - **인사말 섹션**
+    * 제목: "👋 Hola, Good Day!" (h2, 4xl)
+    * 자기소개 텍스트 (full-stack developer, Vue.js 전문)
+
+  - **기술 스택 섹션**
+    * 제목: "🛠️ Tech Stack"
+    * Frontend: Vue, React, TypeScript, Tailwind CSS
+    * Backend: Node.js, Python, PostgreSQL, Redis
+    * 배지 스타일 태그 (blue-100/blue-900)
+
+  - **포트폴리오 타임라인**
+    * 제목: "💼 Experience & Portfolio"
+    * 4개 경력/프로젝트 항목:
+      1. Senior Software Engineer at Tech Company (2020-Present)
+      2. Full Stack Developer at Startup (2018-2020)
+      3. Open Source Contributions (2017-Present)
+      4. Computer Science Degree (2014-2018)
+    * 각 항목: 아이콘, 제목, 기간, 설명, 기술 스택 태그
+    * 타임라인 스타일: 왼쪽 파란색 세로선, 원형 아이콘 마커
+
+- ✅ **TypeScript 데이터 구조**
+  - `PortfolioItem` interface (id, icon, title, link, period, description, tags)
+  - `TechCategory` interface (name, items)
+  - 타입 안전성 확보
+
+#### 4. 다크모드 전역 설정
+- ✅ `apps/_shell/tailwind.config.js`에 `darkMode: 'class'` 추가
+- ✅ `apps/hello-world/tailwind.config.js`에 `darkMode: 'class'` 추가
+- ✅ 모든 컴포넌트에 `dark:` variant 클래스 적용
+  - 배경: `dark:bg-gray-800`, `dark:bg-gray-900`
+  - 텍스트: `dark:text-white`, `dark:text-gray-300`
+  - 테두리: `dark:border-gray-700`
+  - 액센트: `dark:text-blue-400`, `dark:bg-blue-900`
+
+#### 5. 라우팅 확장
+- ✅ `apps/_shell/src/router.ts`에 `/home` 라우트 추가
+  - `/`, `/hello`, `/home` 모두 hello-world 앱으로 라우팅
+  - Module Federation 동적 로드 유지
+
+### 기술 스택 추가/업데이트
+- **기존 유지**: Vue3 3.5.13, TypeScript 5.6.3, Tailwind CSS 3.4.17
+- **다크모드**: Tailwind CSS `darkMode: 'class'` + localStorage
+- **에셋 관리**: Vite asset import (`import from './assets/*.png'`)
+- **vue-router**: 4.4.5 (기존)
+
+### 검증 결과
+- ✅ `pnpm turbo build` 성공
+  - packages/ui 빌드 (ProfileImage 포함)
+  - apps/_shell 빌드
+  - apps/hello-world 빌드
+- ✅ `pnpm turbo type-check` 성공
+  - 모든 TypeScript 타입 검증 통과
+  - ProfileImage, App.vue 인터페이스 타입 안전성 확보
+- ✅ ShellLayout 테스트 존재 (`packages/ui/src/__tests__/ShellLayout.spec.ts`)
+- ✅ 다크모드 동작 확인 (localStorage 저장/로드)
+
+### 프로젝트 구조 (업데이트)
+```
+gongjam-www/
+├── .claude/
+│   ├── CLAUDE.md (이 파일)
+│   └── spec-20251020-hello-world-redesign.md  # 기획 스펙
+├── apps/
+│   ├── _shell/
+│   │   ├── src/
+│   │   │   ├── App.vue                        # ShellLayout 사용
+│   │   │   ├── router.ts                      # /, /hello, /home 라우트
+│   │   │   └── ...
+│   │   └── tailwind.config.js                 # darkMode: 'class' ✨
+│   │
+│   └── hello-world/
+│       ├── src/
+│       │   ├── App.vue                        # 프로필 페이지 ✨ 전면 개편
+│       │   └── ...
+│       └── tailwind.config.js                 # darkMode: 'class' ✨
+│
+├── packages/
+│   └── ui/
+│       ├── src/
+│       │   ├── Button.vue
+│       │   ├── ShellLayout.vue                # ✨ 네비+푸터+다크모드 완성
+│       │   ├── ProfileImage.vue               # ✨ 신규 컴포넌트
+│       │   ├── assets/
+│       │   │   └── my-face-transparent.png    # ✨ 프로필 이미지
+│       │   ├── __tests__/
+│       │   │   ├── Button.spec.ts
+│       │   │   └── ShellLayout.spec.ts        # ✨ 네비/다크모드 테스트
+│       │   └── index.ts                       # ProfileImage export ✨
+│       └── ...
+└── ...
+```
+
+### 주요 기능 및 동작
+
+#### 다크모드 작동 방식
+```typescript
+// ShellLayout.vue
+const isDarkMode = ref<boolean>(false);
+
+// 초기화: localStorage 또는 시스템 선호도
+const initializeDarkMode = (): void => {
+  const savedTheme = localStorage.getItem('theme');
+  if (savedTheme) {
+    isDarkMode.value = savedTheme === 'dark';
+  } else {
+    isDarkMode.value = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  }
+  applyDarkMode();
+};
+
+// 토글: localStorage 저장 + HTML 클래스 적용
+const toggleDarkMode = (): void => {
+  isDarkMode.value = !isDarkMode.value;
+  localStorage.setItem('theme', isDarkMode.value ? 'dark' : 'light');
+  document.documentElement.classList.toggle('dark');
+};
+```
+
+#### 라우팅 구조
+```typescript
+// apps/_shell/src/router.ts
+const routes: RouteRecordRaw[] = [
+  { path: '/', component: () => import('helloWorld/App') },
+  { path: '/hello', component: () => import('helloWorld/App') },
+  { path: '/home', component: () => import('helloWorld/App') },  // ✨ 신규
+];
+```
+
+#### ProfileImage 사용 예시
+```vue
+<!-- apps/hello-world/src/App.vue -->
+<script setup lang="ts">
+import { ProfileImage } from '@gongjam/ui';
+</script>
+
+<template>
+  <ProfileImage size="large" custom-class="w-40 h-40" />
+</template>
+```
+
+### 해결한 기술적 이슈
+
+1. **Asset Import 경로 관리**
+   - 문제: ProfileImage에서 로컬 이미지 asset 참조
+   - 해결: Vite의 asset import 사용 (`import profileImage from './assets/*.png'`)
+   - 빌드 시 asset이 dist에 자동 포함됨
+
+2. **다크모드 전역 적용**
+   - 문제: Module Federation 구조에서 다크모드 상태 공유
+   - 해결: HTML 문서 레벨 (`document.documentElement`)에 `dark` 클래스 적용
+   - 모든 마이크로 앱이 동일한 DOM 트리 공유 → 다크모드 자동 적용
+
+3. **모바일 햄버거 메뉴 라우팅**
+   - 문제: 모바일 메뉴 클릭 시 메뉴 닫히지 않음
+   - 해결: `watch(() => router.currentRoute.value.path)`로 라우트 변경 감지
+   - 라우트 변경 시 자동으로 모바일 메뉴 닫기
+
+### 로컬 테스트 방법
+
+```bash
+# 전체 앱 실행 (권장)
+pnpm dev:all
+# Shell (port 5173) + hello-world (port 3000) 동시 실행
+# http://localhost:5173 접속 (또는 _shell 앱 포트)
+
+# 라우트 테스트
+# http://localhost:5173/ → 프로필 페이지
+# http://localhost:5173/hello → 동일 페이지
+# http://localhost:5173/home → 동일 페이지
+
+# 다크모드 테스트
+# 1. 우측 상단 다크모드 토글 클릭 (🌙/☀️)
+# 2. 전체 페이지 다크모드 전환 확인
+# 3. localStorage 확인: 개발자 도구 > Application > Local Storage > theme
+# 4. 페이지 새로고침 → 테마 유지 확인
+
+# 반응형 테스트
+# 개발자 도구 > 반응형 디자인 모드
+# - Mobile (< 768px): 1열, 햄버거 메뉴
+# - Desktop (> 1024px): 2열 그리드
+```
+
+### 화면 구성 (Desktop)
+```
+┌──────────────────────────────────────────────────────┐
+│ Jeongwoo Ahn    Hello  Blog  GuestBook      🌙      │ ← ShellLayout Nav
+├──────────────────────────────────────────────────────┤
+│  ┌───────────┐  ┌───────────────────────────────┐   │
+│  │ Profile   │  │  👋 Hola, Good Day!           │   │
+│  │  Card     │  │  I'm a passionate...          │   │
+│  │           │  │                                │   │
+│  │ [Image]   │  │  🛠️ Tech Stack                │   │
+│  │  Name     │  │  Frontend: [Vue][React]...    │   │
+│  │  Email    │  │  Backend: [Node.js]...        │   │
+│  │  GitHub   │  │                                │   │
+│  │           │  │  💼 Experience & Portfolio    │   │
+│  └───────────┘  │  • Senior Engineer (2020-)    │   │
+│                 │  • Developer (2018-2020)      │   │
+│                 │  • Open Source (2017-)        │   │
+│                 │  • CS Degree (2014-2018)      │   │
+│                 └───────────────────────────────┘   │
+├──────────────────────────────────────────────────────┤
+│      🐙  📧          © 2025 Jeongwoo Ahn            │ ← ShellLayout Footer
+└──────────────────────────────────────────────────────┘
+```
+
+### 참고 자료
+- 기획 스펙: `.claude/spec-20251020-hello-world-redesign.md`
+- 참고 디자인: https://nuxt-tailwind-blog.netlify.app/
+- Tailwind Dark Mode: https://tailwindcss.com/docs/dark-mode
+
+### 향후 확장 계획
+- [ ] Blog 페이지 구현 (/blog 라우트 활성화)
+- [ ] GuestBook 페이지 구현 (/guest-book 라우트 활성화)
+- [ ] ProfileImage 테스트 작성 (`ProfileImage.spec.ts`)
+- [ ] hello-world App.vue 테스트 업데이트 (프로필 페이지 렌더링 검증)
+- [ ] 추가 마이크로 앱 통합 (다른 기능 모듈)
+- [ ] 애니메이션 효과 (스크롤 애니메이션, 트랜지션)
+- [ ] SEO 메타 태그 추가
+- [ ] CloudFlare Pages 배포 및 검증
+
+---
+
+**최종 업데이트**: 2025-10-31
 **작성자**: Claude Code

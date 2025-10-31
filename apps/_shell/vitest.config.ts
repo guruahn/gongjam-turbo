@@ -1,6 +1,6 @@
 import { defineConfig } from 'vitest/config';
 import vue from '@vitejs/plugin-vue';
-import federation from '@originjs/vite-plugin-federation';
+import { federation } from '@module-federation/vite';
 
 export default defineConfig({
   plugins: [
@@ -8,7 +8,10 @@ export default defineConfig({
     federation({
       name: 'shell',
       remotes: {},
-      shared: ['vue', 'vue-router'],
+      shared: {
+        vue: {},
+        'vue-router': {},
+      },
     }),
   ],
   test: {

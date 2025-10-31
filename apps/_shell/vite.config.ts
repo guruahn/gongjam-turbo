@@ -1,6 +1,6 @@
 import { defineConfig, loadEnv } from 'vite';
 import vue from '@vitejs/plugin-vue';
-import federation from '@originjs/vite-plugin-federation';
+import { federation } from '@module-federation/vite';
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
@@ -12,11 +12,20 @@ export default defineConfig(({ mode }) => {
       federation({
         name: 'shell',
         remotes: {
-          helloWorld: !isDevelopment
-            ? `${env.VITE_HELLO_HOME_URL}/hello-world/assets/remoteEntry.js`
-            : 'http://localhost:3001/hello-world/assets/remoteEntry.js',
+          helloWorld: {
+            type: 'module',
+            name: 'helloWorld',
+            entry: !isDevelopment
+              ? `${env.VITE_HELLO_HOME_URL}/remoteEntry.js`
+              : 'http://localhost:3001/remoteEntry.js',
+            entryGlobalName: 'helloWorld',
+            shareScope: 'default',
+          },
         },
-        shared: ['vue', 'vue-router'],
+        shared: {
+          vue: {},
+          'vue-router': {},
+        },
       }),
     ],
     server: {
