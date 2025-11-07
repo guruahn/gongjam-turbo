@@ -104,7 +104,19 @@
 
     <!-- Main Content Area -->
     <main class="shell-body flex-1 bg-gray-50 dark:bg-gray-800">
-      <slot />
+      <div class="container mx-auto px-4 py-6">
+        <div class="grid lg:grid-cols-3 gap-6">
+          <!-- Profile Card (Left Column - 1/3) -->
+          <aside class="lg:col-span-1">
+            <ProfileCard />
+          </aside>
+
+          <!-- Router Content (Right Column - 2/3) -->
+          <div class="lg:col-span-2">
+            <slot />
+          </div>
+        </div>
+      </div>
     </main>
 
     <!-- Footer -->
@@ -117,17 +129,19 @@
               href="https://github.com/guruahn"
               target="_blank"
               rel="noopener noreferrer"
-              class="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors text-2xl"
+              class="flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
               aria-label="GitHub"
             >
-              <span>🐙</span>
+              <span class="text-2xl">🐙</span>
+              <span class="text-sm font-medium">github.com/guruahn</span>
             </a>
             <a
               href="mailto:guruahn@gmail.com"
-              class="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors text-2xl"
+              class="flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
               aria-label="Email"
             >
-              <span>📧</span>
+              <span class="text-2xl">📧</span>
+              <span class="text-sm font-medium">guruahn@gmail.com</span>
             </a>
           </div>
 
@@ -144,6 +158,7 @@
 <script setup lang="ts">
 import { ref, onMounted, watch } from 'vue';
 import { useRouter } from 'vue-router';
+import ProfileCard from './ProfileCard.vue';
 
 // Dark mode state
 const isDarkMode = ref<boolean>(false);

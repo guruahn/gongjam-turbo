@@ -1,55 +1,72 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { mount } from '@vue/test-utils';
 import App from '../App.vue';
-import { Button } from '@gongjam/ui';
 
 describe('App.vue', () => {
-  let alertSpy: ReturnType<typeof vi.spyOn>;
-
-  beforeEach(() => {
-    alertSpy = vi.spyOn(window, 'alert').mockImplementation(() => {});
-  });
-
-  afterEach(() => {
-    alertSpy.mockRestore();
-  });
-
-  it('renders Hello World heading', () => {
+  it('renders greeting section with title', () => {
     const wrapper = mount(App);
-
-    expect(wrapper.find('h1').text()).toBe('Hello World');
+    expect(wrapper.text()).toContain('👋 Hola, Good Day!');
   });
 
-  it('renders Button component', () => {
+  it('renders greeting section with description', () => {
     const wrapper = mount(App);
-
-    expect(wrapper.findComponent(Button).exists()).toBe(true);
+    expect(wrapper.text()).toContain("I'm a passionate full-stack developer");
   });
 
-  it('Button has correct text', () => {
+  it('renders tech stack section title', () => {
     const wrapper = mount(App);
-    const button = wrapper.findComponent(Button);
-
-    expect(button.text()).toBe('Click Me');
+    expect(wrapper.text()).toContain('🛠️ Tech Stack');
   });
 
-  it('shows alert when button is clicked', async () => {
+  it('renders frontend tech stack', () => {
     const wrapper = mount(App);
-    const button = wrapper.findComponent(Button);
-
-    await button.trigger('click');
-
-    expect(alertSpy).toHaveBeenCalledTimes(1);
-    expect(alertSpy).toHaveBeenCalledWith('Button clicked!');
+    expect(wrapper.text()).toContain('Frontend');
+    expect(wrapper.text()).toContain('Vue');
+    expect(wrapper.text()).toContain('React');
+    expect(wrapper.text()).toContain('TypeScript');
   });
 
-  it('has correct layout structure', () => {
+  it('renders backend tech stack', () => {
     const wrapper = mount(App);
+    expect(wrapper.text()).toContain('Backend');
+    expect(wrapper.text()).toContain('Node.js');
+    expect(wrapper.text()).toContain('Python');
+    expect(wrapper.text()).toContain('PostgreSQL');
+  });
 
-    const mainDiv = wrapper.find('.min-h-screen');
-    expect(mainDiv.exists()).toBe(true);
-    expect(mainDiv.classes()).toContain('flex');
-    expect(mainDiv.classes()).toContain('items-center');
-    expect(mainDiv.classes()).toContain('justify-center');
+  it('renders portfolio timeline section title', () => {
+    const wrapper = mount(App);
+    expect(wrapper.text()).toContain('💼 Experience & Portfolio');
+  });
+
+  it('renders portfolio items', () => {
+    const wrapper = mount(App);
+    expect(wrapper.text()).toContain('Senior Software Engineer at Tech Company');
+    expect(wrapper.text()).toContain('Full Stack Developer at Startup');
+    expect(wrapper.text()).toContain('Open Source Contributions');
+    expect(wrapper.text()).toContain('Computer Science Degree');
+  });
+
+  it('has correct content container class', () => {
+    const wrapper = mount(App);
+    const container = wrapper.find('.hello-content');
+    expect(container.exists()).toBe(true);
+    expect(container.classes()).toContain('space-y-8');
+  });
+
+  it('renders sections with proper styling', () => {
+    const wrapper = mount(App);
+    const sections = wrapper.findAll('section');
+
+    // Should have 3 sections: greeting, tech stack, portfolio
+    expect(sections.length).toBeGreaterThanOrEqual(3);
+
+    // Each section should have proper styling
+    sections.forEach((section) => {
+      expect(section.classes()).toContain('bg-white');
+      expect(section.classes()).toContain('dark:bg-gray-800');
+      expect(section.classes()).toContain('rounded-2xl');
+      expect(section.classes()).toContain('shadow-lg');
+    });
   });
 });

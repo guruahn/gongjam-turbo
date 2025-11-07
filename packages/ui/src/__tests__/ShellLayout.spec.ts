@@ -1,60 +1,126 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
 import { mount } from '@vue/test-utils';
+import { createRouter, createMemoryHistory } from 'vue-router';
 import ShellLayout from '../ShellLayout.vue';
 
 describe('ShellLayout', () => {
-  it('renders header with correct text', () => {
-    const wrapper = mount(ShellLayout);
-    expect(wrapper.find('header').text()).toContain('this is header');
+  let router: ReturnType<typeof createRouter>;
+
+  beforeEach(() => {
+    // Create a minimal router for testing
+    router = createRouter({
+      history: createMemoryHistory(),
+      routes: [
+        { path: '/', component: { template: '<div>Home</div>' } },
+        { path: '/hello', component: { template: '<div>Hello</div>' } },
+      ],
+    });
   });
 
-  it('renders slot content in body', () => {
+  it('renders navigation bar with Jeongwoo Ahn title', async () => {
+    const wrapper = mount(ShellLayout, {
+      global: {
+        plugins: [router],
+      },
+    });
+    await router.isReady();
+
+    const nav = wrapper.find('nav');
+    expect(nav.text()).toContain('Jeongwoo Ahn');
+  });
+
+  it('renders 3-column grid structure', () => {
+    const wrapper = mount(ShellLayout, {
+      global: {
+        plugins: [router],
+      },
+    });
+
+    const gridContainer = wrapper.find('.grid.lg\\:grid-cols-3');
+    expect(gridContainer.exists()).toBe(true);
+  });
+
+  it('renders ProfileCard in aside column', () => {
+    const wrapper = mount(ShellLayout, {
+      global: {
+        plugins: [router],
+      },
+    });
+
+    const aside = wrapper.find('aside.lg\\:col-span-1');
+    expect(aside.exists()).toBe(true);
+    expect(aside.find('.profile-card').exists()).toBe(true);
+  });
+
+  it('renders slot content in main column (lg:col-span-2)', () => {
     const wrapper = mount(ShellLayout, {
       slots: {
         default: '<div class="test-content">Test Content</div>',
       },
+      global: {
+        plugins: [router],
+      },
     });
-    expect(wrapper.find('.shell-body').html()).toContain('Test Content');
+
+    const mainColumn = wrapper.find('.lg\\:col-span-2');
+    expect(mainColumn.exists()).toBe(true);
+    expect(mainColumn.html()).toContain('Test Content');
   });
 
-  it('applies correct CSS classes to layout', () => {
-    const wrapper = mount(ShellLayout);
-    expect(wrapper.find('.shell-layout').classes()).toContain('min-h-screen');
-    expect(wrapper.find('.shell-layout').classes()).toContain('flex');
-    expect(wrapper.find('.shell-layout').classes()).toContain('flex-col');
+  it('renders footer with GitHub link text', () => {
+    const wrapper = mount(ShellLayout, {
+      global: {
+        plugins: [router],
+      },
+    });
+
+    const footer = wrapper.find('footer');
+    expect(footer.exists()).toBe(true);
+    expect(footer.text()).toContain('github.com/guruahn');
   });
 
-  it('applies correct CSS classes to header', () => {
-    const wrapper = mount(ShellLayout);
-    const header = wrapper.find('.shell-header');
-    expect(header.classes()).toContain('bg-blue-600');
-    expect(header.classes()).toContain('text-white');
-    expect(header.classes()).toContain('p-4');
+  it('renders footer with email link text', () => {
+    const wrapper = mount(ShellLayout, {
+      global: {
+        plugins: [router],
+      },
+    });
+
+    const footer = wrapper.find('footer');
+    expect(footer.text()).toContain('guruahn@gmail.com');
   });
 
-  it('applies correct CSS classes to body', () => {
-    const wrapper = mount(ShellLayout);
-    const body = wrapper.find('.shell-body');
-    expect(body.classes()).toContain('flex-1');
-    expect(body.classes()).toContain('container');
-    expect(body.classes()).toContain('mx-auto');
-    expect(body.classes()).toContain('p-4');
+  it('applies correct CSS classes to layout container', () => {
+    const wrapper = mount(ShellLayout, {
+      global: {
+        plugins: [router],
+      },
+    });
+
+    const layout = wrapper.find('.shell-layout');
+    expect(layout.classes()).toContain('min-h-screen');
+    expect(layout.classes()).toContain('flex');
+    expect(layout.classes()).toContain('flex-col');
   });
 
-  it('has proper HTML structure', () => {
+  it('has proper HTML structure with nav, main, and footer', () => {
     const wrapper = mount(ShellLayout, {
       slots: {
         default: '<div>Content</div>',
       },
+      global: {
+        plugins: [router],
+      },
     });
 
-    // Verify header is inside shell-layout
-    expect(wrapper.find('.shell-layout').find('header').exists()).toBe(true);
+    // Verify header/nav exists
+    expect(wrapper.find('header').exists()).toBe(true);
+    expect(wrapper.find('nav').exists()).toBe(true);
 
-    // Verify main is inside shell-layout
-    expect(wrapper.find('.shell-layout').find('main').exists()).toBe(true);
+    // Verify main content area exists
+    expect(wrapper.find('main.shell-body').exists()).toBe(true);
 
-    // Verify slot content is inside main
-    expect(wrapper.find('main').text()).toContain('Content');
+    // Verify footer exists
+    expect(wrapper.find('footer.shell-footer').exists()).toBe(true);
   });
 });
