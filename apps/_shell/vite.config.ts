@@ -21,6 +21,15 @@ export default defineConfig(({ mode }) => {
             entryGlobalName: 'helloWorld',
             shareScope: 'default',
           },
+          blog: {
+            type: 'module',
+            name: 'blog',
+            entry: !isDevelopment
+              ? `${env.VITE_BLOG_URL}/remoteEntry.js`
+              : 'http://localhost:3002/remoteEntry.js',
+            entryGlobalName: 'blog',
+            shareScope: 'default',
+          },
         },
         shared: {
           vue: {},

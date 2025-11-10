@@ -1,0 +1,8 @@
+# robots.txt for Jeongwoo Ahn's Blog
+# Allow all crawlers to index the site
+
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://jeongwoo.in/sitemap.xml

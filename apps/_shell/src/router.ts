@@ -13,6 +13,10 @@ const routes: RouteRecordRaw[] = [
     path: '/home',
     component: () => import('helloWorld/App'),
   },
+  {
+    path: '/blog/:pathMatch(.*)*',
+    component: () => import('blog/App'),
+  },
 ];
 
 export default routes;
