@@ -171,3 +171,5 @@ web_modules/
 *.njsproj
 *.sln
 *.sw?
+
+.blog/
