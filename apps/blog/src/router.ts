@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
+import { RouteRecordRaw } from 'vue-router';
 import BlogListPage from './pages/BlogListPage.vue';
 import BlogPostPage from './pages/BlogPostPage.vue';
 
@@ -22,9 +22,4 @@ const routes: RouteRecordRaw[] = [
   },
 ];
 
-const router = createRouter({
-  history: createWebHistory('/blog'),
-  routes,
-});
-
-export default router;
+export default routes;

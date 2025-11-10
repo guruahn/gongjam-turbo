@@ -5,8 +5,7 @@
   "private": true,
   "scripts": {
     "dev": "vite",
-    "build": "pnpm build:posts && vite build",
-    "build:full": "pnpm build:posts && vite build && pnpm build:sitemap",
+    "build": "pnpm build:posts && vite build && pnpm build:sitemap",
     "build:posts": "tsx scripts/build-posts.ts",
     "build:sitemap": "tsx scripts/generate-sitemap.ts",
     "preview": "vite preview",

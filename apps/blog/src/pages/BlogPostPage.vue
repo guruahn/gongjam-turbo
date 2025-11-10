@@ -27,7 +27,7 @@ if (!currentPost.value) {
 // SEO 메타 태그 적용 (currentPost가 변경될 때마다)
 watch(
   currentPost,
-  (post) => {
+  post => {
     if (post) {
       useBlogPostMeta({
         title: post.frontmatter.title,
@@ -63,12 +63,15 @@ const relatedPosts = computed(() => {
 </script>
 
 <template>
-  <div v-if="currentPost" class="blog-post-page min-h-screen bg-gray-50 dark:bg-gray-900 py-12 px-4">
+  <div
+    v-if="currentPost"
+    class="blog-post-page min-h-screen bg-gray-50 dark:bg-gray-900 py-12 px-4"
+  >
     <div class="max-w-7xl mx-auto">
       <!-- 뒤로 가기 -->
       <div class="mb-8">
         <router-link
-          to="/blog"
+          to="/"
           class="inline-flex items-center text-blue-600 dark:text-blue-400 hover:underline"
         >
           <svg
@@ -94,12 +97,16 @@ const relatedPosts = computed(() => {
         <div class="lg:col-span-8">
           <!-- 헤더 -->
           <header class="mb-8">
-            <h1 class="text-4xl md:text-5xl font-bold mb-4 text-gray-900 dark:text-white">
+            <h1
+              class="text-4xl md:text-5xl font-bold mb-4 text-gray-900 dark:text-white"
+            >
               {{ currentPost.frontmatter.title }}
             </h1>
 
             <!-- 메타 정보 -->
-            <div class="flex flex-wrap items-center gap-4 text-gray-600 dark:text-gray-400 mb-6">
+            <div
+              class="flex flex-wrap items-center gap-4 text-gray-600 dark:text-gray-400 mb-6"
+            >
               <time :datetime="currentPost.frontmatter.date">
                 {{ formattedDate }}
               </time>
@@ -144,10 +151,14 @@ const relatedPosts = computed(() => {
                 :to="`/blog/${post.slug}`"
                 class="block bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 hover:shadow-xl transition-shadow"
               >
-                <h3 class="text-xl font-semibold mb-2 text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400">
+                <h3
+                  class="text-xl font-semibold mb-2 text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400"
+                >
                   {{ post.frontmatter.title }}
                 </h3>
-                <p class="text-gray-600 dark:text-gray-400 text-sm line-clamp-2">
+                <p
+                  class="text-gray-600 dark:text-gray-400 text-sm line-clamp-2"
+                >
                   {{ post.frontmatter.description }}
                 </p>
               </router-link>

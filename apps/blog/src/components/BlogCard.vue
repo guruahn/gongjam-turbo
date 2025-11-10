@@ -22,7 +22,7 @@ const readingTimeText = computed(() => {
 
 <template>
   <router-link
-    :to="`/blog/${post.slug}`"
+    :to="`/${post.slug}`"
     class="blog-card group block bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden"
   >
     <!-- 썸네일 (있을 경우) -->
@@ -47,7 +47,9 @@ const readingTimeText = computed(() => {
       </h2>
 
       <!-- 메타 정보 (날짜, 읽기 시간) -->
-      <div class="flex items-center gap-4 mb-4 text-sm text-gray-600 dark:text-gray-400">
+      <div
+        class="flex items-center gap-4 mb-4 text-sm text-gray-600 dark:text-gray-400"
+      >
         <time :datetime="post.frontmatter.date">
           {{ formattedDate }}
         </time>

@@ -16,6 +16,8 @@ export default defineConfig(({ mode }) => {
         name: 'blog',
         filename: 'remoteEntry.js',
         exposes: {
+          './bootstrap': './src/bootstrap.ts',
+          './BlogShell': './src/BlogShell.vue',
           './App': './src/App.vue',
           './BlogRouter': './src/router.ts',
           './BlogListPage': './src/pages/BlogListPage.vue',

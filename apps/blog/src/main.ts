@@ -1,9 +1,5 @@
-import { createApp } from 'vue';
-import router from './router';
-import App from './App.vue';
-import './style.css';
-
-const app = createApp(App);
-
-app.use(router);
-app.mount('#app');
+import { bootstrap } from './bootstrap';
+// Standalone 모드로 실행
+bootstrap({
+  mode: 'standalone',
+}).mount('#app');

@@ -15,7 +15,8 @@ const routes: RouteRecordRaw[] = [
   },
   {
     path: '/blog/:pathMatch(.*)*',
-    component: () => import('blog/App'),
+    component: () => import('blog/BlogShell'),
+    props: { mode: 'federated' },
   },
 ];
 
