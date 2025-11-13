@@ -1,7 +1,7 @@
 ---
 name: feature-spec-writer
 description: 이 에이전트는 새로운 기능이나 개선사항에 대한 기능 명세서(feature specification) 및 **작업 계획(work plan)**을 작성할 때 사용됩니다.
-tools: Edit, Write, NotebookEdit
+tools: Read, Glob, Grep, Bash, Edit, Write, NotebookEdit
 model: sonnet
 color: orange
 ---

@@ -7,6 +7,7 @@ let blogApp: ReturnType<typeof bootstrap> | null = null;
 
 const props = defineProps<{
   mode: 'standalone' | 'federated';
+  basePath?: string;
 }>();
 onMounted(() => {
   if (!mountPoint.value) return;
@@ -15,7 +16,7 @@ onMounted(() => {
   if (props.mode === 'federated') {
     blogApp = bootstrap({
       mode: 'federated',
-      basePath: '/blog',
+      basePath: props.basePath || '/blog',
     });
     blogApp.mount(mountPoint.value);
   }
