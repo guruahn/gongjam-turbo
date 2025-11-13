@@ -146,6 +146,16 @@
               <span class="text-sm font-medium">github.com/guruahn</span>
             </a>
             <a
+              href="https://medium.com/@jeongwooahn"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+              aria-label="Medium Blog"
+            >
+              <span class="text-2xl">📝</span>
+              <span class="text-sm font-medium">Old Blog</span>
+            </a>
+            <a
               href="mailto:guruahn@gmail.com"
               class="flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
               aria-label="Email"

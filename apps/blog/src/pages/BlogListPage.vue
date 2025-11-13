@@ -61,7 +61,7 @@ const postCount = computed(() => filteredPosts.value.length);
       <!-- 포스트 그리드 -->
       <div
         v-if="filteredPosts.length > 0"
-        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+        class="grid grid-cols-1 md:grid-cols-2 gap-8"
       >
         <BlogCard
           v-for="post in filteredPosts"
