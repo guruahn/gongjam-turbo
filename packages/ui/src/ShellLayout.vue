@@ -2,15 +2,20 @@
   <div :class="['shell-layout', 'min-h-screen', 'flex', 'flex-col', { 'dark': isDarkMode }]">
     <!-- Navigation Bar -->
     <header class="shell-header bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 sticky top-0 z-50">
-      <nav class="container mx-auto px-4 py-4">
+      <nav class="container mx-auto max-w-screen-lg px-4 py-4">
         <div class="flex items-center justify-between">
           <!-- Logo -->
           <div class="flex items-center">
             <router-link
               to="/"
-              class="text-xl font-bold text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+              class="flex items-center"
             >
-              Jeongwoo Ahn
+              <!-- Desktop: Text Logo -->
+              <span class="hidden md:block text-xl font-bold text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                Jeongwoo Ahn
+              </span>
+              <!-- Mobile: Profile Image -->
+              <ProfileImage size="custom" custom-class="md:hidden w-14 h-14" />
             </router-link>
           </div>
 
@@ -104,14 +109,19 @@
 
     <!-- Main Content Area -->
     <main class="shell-body flex-1 bg-gray-50 dark:bg-gray-800">
-      <div class="container mx-auto px-4 py-6">
+      <div class="container mx-auto max-w-screen-lg px-4 py-6">
         <div class="grid lg:grid-cols-3 gap-6">
-          <!-- Profile Card (Left Column - 1/3) -->
-          <aside class="lg:col-span-1">
+          <!-- Profile Card (Left Column - 1/3) - Visible on mobile for / and /hello -->
+          <aside
+            :class="[
+              'lg:col-span-1',
+              shouldShowProfileOnMobile ? 'block' : 'hidden lg:block'
+            ]"
+          >
             <ProfileCard />
           </aside>
 
-          <!-- Router Content (Right Column - 2/3) -->
+          <!-- Router Content (Right Column - 2/3, Full Width on Mobile) -->
           <div class="lg:col-span-2">
             <slot />
           </div>
@@ -121,7 +131,7 @@
 
     <!-- Footer -->
     <footer class="shell-footer bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 py-8">
-      <div class="container mx-auto px-4">
+      <div class="container mx-auto max-w-screen-lg px-4">
         <div class="flex flex-col items-center space-y-4">
           <!-- Social Links -->
           <div class="flex items-center space-x-6">
@@ -156,9 +166,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, watch } from 'vue';
+import { ref, onMounted, watch, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import ProfileCard from './ProfileCard.vue';
+import ProfileImage from './ProfileImage.vue';
 
 // Dark mode state
 const isDarkMode = ref<boolean>(false);
@@ -168,6 +179,12 @@ const isMobileMenuOpen = ref<boolean>(false);
 
 // Router for navigation
 const router = useRouter();
+
+// Check if current route should show profile on mobile
+const shouldShowProfileOnMobile = computed(() => {
+  const path = router.currentRoute.value.path;
+  return path === '/' || path === '/hello';
+});
 
 // Initialize dark mode from localStorage or system preference
 const initializeDarkMode = (): void => {

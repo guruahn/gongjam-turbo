@@ -36,15 +36,24 @@ export function bootstrap(options: BootstrapOptions = {}) {
     routes,
   });
 
-  // Vue 앱 생성
-  const app = createApp(App);
-  app.use(router);
-
-  // Federated 모드일 때는 현재 경로로 라우팅
+  // Federated 모드일 때 브라우저 URL과 동기화
   if (mode === 'federated') {
+    // 라우터 네비게이션 발생 시 브라우저 URL 업데이트
+    router.afterEach((to) => {
+      const fullPath = basePath + to.fullPath;
+      if (window.location.pathname !== fullPath) {
+        window.history.pushState({}, '', fullPath);
+      }
+    });
+
+    // 현재 브라우저 URL로 초기 라우팅
     const currentPath = window.location.pathname.replace(basePath, '') || '/';
     router.push(currentPath);
   }
+
+  // Vue 앱 생성
+  const app = createApp(App);
+  app.use(router);
 
   return {
     app,

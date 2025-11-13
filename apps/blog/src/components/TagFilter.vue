@@ -20,7 +20,7 @@ const isTagSelected = (tag: string) => {
     <div class="flex flex-wrap gap-2">
       <!-- All 태그 (선택 해제) -->
       <router-link
-        to="/blog"
+        to="/"
         :class="[
           'px-4 py-2 rounded-full text-sm font-medium transition-all duration-200',
           !selectedTag
@@ -35,7 +35,7 @@ const isTagSelected = (tag: string) => {
       <router-link
         v-for="tag in tags"
         :key="tag"
-        :to="`/blog/tag/${tag}`"
+        :to="`/tag/${tag}`"
         :class="[
           'px-4 py-2 rounded-full text-sm font-medium transition-all duration-200',
           isTagSelected(tag)

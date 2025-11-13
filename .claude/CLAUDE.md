@@ -2,12 +2,13 @@
 이 문서는 현재 프로젝트의 기술적 현황과 구조의 요약과 향후 과제에 대한 것입니다.
 
 ## 기술 스택 적용
-- **Module Federation**: @originjs/vite-plugin-federation 1.4.1
+- **Module Federation**: @module-federation/vite 1.9.0
 - **Vue Router**: 4.4.5
-- **Concurrently**: 9.1.0 (병렬 실행)
+- **Concurrently**: 9.2.1 (병렬 실행)
 - **Vue3**: 3.5.13 (기존)
 - **TypeScript**: 5.6.3 (기존)
 - **Vite**: 6.0.3 (기존)
+- **Tailwind CSS**: 3.4.17 (UI 스타일링)
 
 
 ## 프로젝트 구조
@@ -18,7 +19,7 @@ gongjam-www/
 │   │   ├── src/
 │   │   │   ├── App.vue              # ShellLayout 사용
 │   │   │   ├── main.ts              # Vue + Router 초기화
-│   │   │   ├── router.ts            # /hello 라우트 설정
+│   │   │   ├── router.ts            # /, /hello, /home, /blog/* 라우트 설정
 │   │   │   ├── pages/
 │   │   │   │   └── HelloPage.vue    # hello-world federation 로드
 │   │   │   ├── __tests__/
@@ -31,26 +32,65 @@ gongjam-www/
 │   │   ├── package.json
 │   │   └── ...
 │   │
-│   └── hello-world/                  # Module Federation Remote 앱
+│   ├── hello-world/                  # Module Federation Remote 앱
+│   │   ├── vite.config.ts           # Module Federation Remote 설정
+│   │   ├── .env.development
+│   │   ├── .env.production
+│   │   ├── server/                  # 포트: 3001
+│   │   └── ...
+│   │
+│   └── blog/                         # Module Federation Remote 앱 (블로그)
+│       ├── src/
+│       │   ├── App.vue              # 블로그 앱 메인
+│       │   ├── BlogShell.vue        # 블로그 셸 컴포넌트
+│       │   ├── bootstrap.ts         # 부트스트랩 파일
+│       │   ├── router.ts            # 블로그 라우터
+│       │   ├── pages/
+│       │   │   ├── BlogListPage.vue # 블로그 목록 페이지
+│       │   │   └── BlogPostPage.vue # 블로그 게시글 페이지
+│       │   ├── components/
+│       │   │   ├── BlogCard.vue     # 블로그 카드 컴포넌트
+│       │   │   ├── BlogTOC.vue      # 목차 컴포넌트
+│       │   │   ├── MarkdownRenderer.vue # 마크다운 렌더러
+│       │   │   └── TagFilter.vue    # 태그 필터 컴포넌트
+│       │   ├── composables/
+│       │   │   └── useBlogPosts.ts  # 블로그 포스트 관리 composable
+│       │   ├── utils/
+│       │   │   ├── markdown.ts      # 마크다운 처리 유틸리티
+│       │   │   ├── readingTime.ts   # 읽기 시간 계산
+│       │   │   ├── seo.ts           # SEO 유틸리티
+│       │   │   └── toc.ts           # 목차 생성 유틸리티
+│       │   └── types/
+│       │       └── blog.ts          # 블로그 타입 정의
+│       ├── posts/                   # 블로그 마크다운 파일
+│       ├── scripts/
+│       │   ├── build-posts.ts       # 포스트 빌드 스크립트
+│       │   └── generate-sitemap.ts  # 사이트맵 생성 스크립트
 │       ├── vite.config.ts           # Module Federation Remote 설정
 │       ├── .env.development
 │       ├── .env.production
+│       ├── tailwind.config.js       # Tailwind CSS 설정
 │       └── ...
 │
 ├── packages/
-│   ├── ui/
+│   ├── ui/                           # 공통 UI 컴포넌트 패키지
 │   │   ├── src/
-│   │   │   ├── Button.vue
+│   │   │   ├── Button.vue           # 버튼 컴포넌트
 │   │   │   ├── ShellLayout.vue      # 공통 레이아웃 컴포넌트
+│   │   │   ├── ProfileCard.vue      # 프로필 카드 컴포넌트
+│   │   │   ├── ProfileImage.vue     # 프로필 이미지 컴포넌트
 │   │   │   ├── __tests__/
 │   │   │   │   ├── Button.spec.ts
-│   │   │   │   └── ShellLayout.spec.ts
-│   │   │   └── index.ts             # ShellLayout export 추가
+│   │   │   │   ├── ShellLayout.spec.ts
+│   │   │   │   └── ProfileCard.spec.ts
+│   │   │   └── index.ts             # 컴포넌트 export
 │   │   └── ...
-│   └── ...
+│   ├── vite-config/                  # Vite 공통 설정
+│   ├── eslint-config/                # ESLint 공통 설정
+│   └── typescript-config/            # TypeScript 공통 설정
 │
 ├── package.json                      # concurrently 추가, dev:all 스크립트
-└── turbo.json                        # _shell 앱 파이프라인 추가
+└── turbo.json                        # _shell, hello-world, blog 앱 파이프라인 추가
 ```
 
 ### Module Federation 아키텍처
@@ -68,6 +108,12 @@ gongjam-www/
 │  │  │   ┌─────────────────────┐   │  │  │
 │  │  │   │  hello-world 앱     │   │  │  │
 │  │  │   │  (Remote Module)    │   │  │  │
+│  │  │   │  Routes: /,/hello   │   │  │  │
+│  │  │   └─────────────────────┘   │  │  │
+│  │  │   ┌─────────────────────┐   │  │  │
+│  │  │   │  blog 앱            │   │  │  │
+│  │  │   │  (Remote Module)    │   │  │  │
+│  │  │   │  Routes: /blog/*    │   │  │  │
 │  │  │   └─────────────────────┘   │  │  │
 │  │  └─────────────────────────────┘  │  │
 │  └───────────────────────────────────┘  │
@@ -80,6 +126,18 @@ gongjam-www/
 │  - Exposes: ./App (App.vue)             │
 │  - Independent Runtime ✓                │
 │  - Shared: vue                          │
+└─────────────────────────────────────────┘
+          ↓ (Module Federation)
+          ↓ remoteEntry.js
+┌─────────────────────────────────────────┐
+│    apps/blog (Remote App)               │
+│    Port: 3002                           │
+│  - Exposes: ./BlogShell, ./App,         │
+│    ./BlogRouter, ./BlogListPage,        │
+│    ./BlogPostPage, ./bootstrap          │
+│  - Independent Runtime ✓                │
+│  - Shared: vue, vue-router              │
+│  - Features: 마크다운 블로그, Tailwind   │
 └─────────────────────────────────────────┘
 ```
 
@@ -100,6 +158,9 @@ export default defineConfig(({ mode }) => {
           helloWorld: !isDevelopment
             ? `${env.VITE_HELLO_HOME_URL}/hello-world/assets/remoteEntry.js`
             : 'http://localhost:3001/hello-world/assets/remoteEntry.js',
+          blog: !isDevelopment
+            ? `${env.VITE_BLOG_URL}/remoteEntry.js`
+            : 'http://localhost:3002/remoteEntry.js',
         },
         shared: ['vue', 'vue-router'],
       }),
@@ -123,27 +184,66 @@ export default defineConfig({
       shared: ['vue']
     })
   ],
-  server: { port: 3001 }, // 포트 변경
+  server: { port: 3001 },
 });
 ```
 
-### `apps/_shell/src/pages/HelloPage.vue`
-```vue
-<script setup lang="ts">
-import { defineAsyncComponent } from 'vue'
+### `apps/blog/vite.config.ts` (Remote 설정 - Blog)
+```typescript
+export default defineConfig(({ mode }) => {
+  const env = loadEnv(mode, process.cwd(), '');
+  const isDevelopment = mode === 'development';
+  const baseUrl = !isDevelopment && env.VITE_BASE_URL
+    ? env.VITE_BASE_URL + '/'
+    : '/';
 
-const HelloWorldApp = defineAsyncComponent(
-  () => import('helloWorld/App')
-)
-</script>
+  return {
+    base: baseUrl,
+    plugins: [
+      vue(),
+      federation({
+        name: 'blog',
+        filename: 'remoteEntry.js',
+        exposes: {
+          './bootstrap': './src/bootstrap.ts',
+          './BlogShell': './src/BlogShell.vue',
+          './App': './src/App.vue',
+          './BlogRouter': './src/router.ts',
+          './BlogListPage': './src/pages/BlogListPage.vue',
+          './BlogPostPage': './src/pages/BlogPostPage.vue',
+        },
+        shared: {
+          vue: {},
+          'vue-router': {},
+        },
+      }),
+    ],
+    server: { port: 3002 },
+  };
+});
+```
 
-<template>
-  <div class="hello-page">
-    <Suspense>
-      <HelloWorldApp />
-    </Suspense>
-  </div>
-</template>
+### `apps/_shell/src/router.ts` (Shell Router 설정)
+```typescript
+const routes: RouteRecordRaw[] = [
+  {
+    path: '/',
+    component: () => import('helloWorld/App'),
+  },
+  {
+    path: '/hello',
+    component: () => import('helloWorld/App'),
+  },
+  {
+    path: '/home',
+    component: () => import('helloWorld/App'),
+  },
+  {
+    path: '/blog/:pathMatch(.*)*',
+    component: () => import('blog/BlogShell'),
+    props: { mode: 'federated', basePath: '/blog' },
+  },
+];
 ```
 
 ## 로컬 테스트 방법
@@ -151,33 +251,130 @@ const HelloWorldApp = defineAsyncComponent(
 ```bash
 # 1. 병렬 실행 (권장)
 pnpm dev:all
-# Shell (port 3000) + hello-world (port 3001) 동시 실행
+# Shell (port 3000) + hello-world (port 3001) + blog (port 3002) 동시 실행
 
 # 2. 개별 실행
-# Terminal 1: hello-world 앱 (Remote)
-pnpm dev:hello
-or
-pnpm --filter hello-world dev
-
-# Terminal 2: Shell 앱 (Host)
+# Terminal 1: Shell 앱 (Host)
 pnpm dev:shell
-or
+# 또는
 pnpm --filter _shell dev
 
+# Terminal 2: hello-world 앱 (Remote)
+pnpm dev:hello
+# 또는
+pnpm --filter hello-world dev
+
+# Terminal 3: blog 앱 (Remote)
+pnpm dev:blog
+# 또는
+pnpm --filter blog dev
+```
+
+## 빌드 및 배포
+
+```bash
+# 전체 빌드
+pnpm build
+
+# 개별 앱 빌드
+pnpm --filter _shell build
+pnpm --filter hello-world build
+pnpm --filter blog build
+
+# 블로그 사이트맵 생성
+pnpm --filter blog build:sitemap
+
+# 이미지 업로드 (Cloudflare R2)
+pnpm upload:image
 ```
 
 ## 배포 URL 구조
-- **Shell**: `https://jeongwoo.in/`
-- **hello-world remote entry**: `https://hello.jeongwoo.in/remoteEntry.js`
-- **blog remote entry**: `https://blog.jeongwoo.in/remoteEntry.js`
+- **Shell (Host)**: `https://jeongwoo.in/`
+  - 홈: `/`, `/hello`, `/home`
+  - 블로그: `/blog/*`
+- **hello-world (Remote)**: `https://hello.jeongwoo.in/hello-world/assets/remoteEntry.js`
+- **blog (Remote)**: `https://blog.jeongwoo.in/remoteEntry.js`
+
+## 주요 기능
+
+### hello-world 앱
+- 간단한 홈 페이지 (인트로)
+- Shell의 루트 경로에 마운트
+
+### blog 앱
+- 마크다운 기반 블로그 시스템
+- Tailwind CSS + @tailwindcss/typography를 이용한 스타일링
+- Shiki를 이용한 코드 하이라이팅
+- 주요 페이지:
+  - 블로그 목록 (`/blog`)
+  - 블로그 게시글 (`/blog/posts/:slug`)
+- 주요 기능:
+  - 마크다운 렌더링 (markdown-it)
+  - 목차 자동 생성 (TOC)
+  - 읽기 시간 계산
+  - 태그 필터링
+  - SEO 최적화
+  - 사이트맵 자동 생성
+- 블로그 게시글은 `posts/` 디렉토리에 마크다운 파일로 저장
+
+## 테스트
+
+```bash
+# 전체 테스트 실행
+pnpm test
+
+# 개별 앱 테스트
+pnpm --filter _shell test
+pnpm --filter hello-world test
+pnpm --filter blog test
+
+# 블로그 테스트 커버리지
+pnpm --filter blog test:coverage
+
+# Watch 모드
+pnpm --filter blog test:watch
+```
+
+## 코드 품질
+
+```bash
+# Lint 검사
+pnpm lint
+
+# Type 체크
+pnpm type-check
+
+# 코드 포맷팅
+pnpm format
+
+# 포맷팅 검사
+pnpm format:check
+```
 
 ## 향후 확장 계획
 - [ ] 홈 화면의 더미내용을 실제로 변경
 - [ ] 블로그의 태그 기능 완성
 - [ ] 블로그의 좋아요 기능 추가
+- [ ] 블로그 검색 기능 추가
 - [ ] 게스트북 (방명록) 페이지 추가
+- [ ] 다크모드 지원
+- [ ] RSS 피드 생성
 
+## 주요 의존성
 
+### 공통
+- **Vue**: 3.5.13
+- **Vue Router**: 4.4.5
+- **TypeScript**: 5.6.3
+- **Vite**: 6.0.3
+- **Vitest**: 3.2.4 (테스팅)
 
-**최종 업데이트**: 2025-11-07
+### Blog 앱 전용
+- **markdown-it**: 14.1.0 (마크다운 파싱)
+- **shiki**: 1.22.0 (코드 하이라이팅)
+- **gray-matter**: 4.0.3 (frontmatter 파싱)
+- **date-fns**: 4.1.0 (날짜 포맷팅)
+- **reading-time**: 1.5.0 (읽기 시간 계산)
+
+**최종 업데이트**: 2025-11-14
 **작성자**: Claude Code

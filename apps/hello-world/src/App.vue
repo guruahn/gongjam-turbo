@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { portfolio, techStack } from './data/portfolio';
+import { portfolio } from './data/portfolio';
 </script>
 
 <template>
@@ -7,37 +7,25 @@ import { portfolio, techStack } from './data/portfolio';
     <!-- Greeting Section -->
     <section class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8">
       <h2 class="text-4xl font-bold text-gray-900 dark:text-white mb-4">
-        👋 Hola, Good Day!
+        👋 안녕하세요!
       </h2>
       <div class="prose prose-lg dark:prose-invert max-w-none">
-        <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
-          I'm a passionate full-stack developer specializing in modern web technologies and scalable architectures.
-          With expertise in Vue.js, TypeScript, and microservices, I build high-performance applications that deliver exceptional user experiences.
-          Always exploring cutting-edge technologies and contributing to the open-source community.
+        <p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">
+          우연한 기회로 IT 업계에 발을 들였고 💻<br />
+          웹 기술로 세상을 바꿀 수 있다는 젊은 호기심 하나로 개발을
+          시작했습니다.<br />
+          지금은 금융과 보험의 변화를 꿈꾸는 회사에서 하루하루 배우며 성장하고
+          있습니다.
         </p>
-      </div>
-    </section>
-
-    <!-- Tech Stack Section -->
-    <section class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8">
-      <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-6">
-        🛠️ Tech Stack
-      </h2>
-      <div class="space-y-6">
-        <div v-for="category in techStack" :key="category.name">
-          <h3 class="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-3">
-            {{ category.name }}
-          </h3>
-          <div class="flex flex-wrap gap-2">
-            <span
-              v-for="tech in category.items"
-              :key="tech"
-              class="px-4 py-2 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-lg font-medium text-sm"
-            >
-              {{ tech }}
-            </span>
-          </div>
-        </div>
+        <p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">
+          아직은 스페셜리스트라 부르기엔 부족하지만, 꾸준히 나아가고 있습니다.
+          🌱<br />
+          존경받는 시니어가 되는 길은 멀지만, 맡은 일엔 책임을 다하려고 합니다.
+        </p>
+        <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
+          비염 때문에 코가 막혀도 커피향은 절대 포기 못 하고 ☕<br />
+          가끔은 허세 섞인 독서로 마음의 균형을 잡습니다. 📚
+        </p>
       </div>
     </section>
 

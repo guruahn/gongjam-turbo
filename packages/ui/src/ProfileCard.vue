@@ -1,18 +1,22 @@
 <template>
-  <div class="profile-card bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-4 sticky top-20">
+  <div
+    class="profile-card bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-4 sticky top-20"
+  >
     <!-- Profile Image -->
     <div class="flex justify-center mb-3">
       <ProfileImage size="medium" custom-class="w-24 h-24" />
     </div>
 
     <!-- Name -->
-    <h2 class="text-xl font-bold text-gray-900 dark:text-white text-center mb-1">
+    <h2
+      class="text-xl font-bold text-gray-900 dark:text-white text-center mb-1"
+    >
       Jeongwoo Ahn
     </h2>
 
     <!-- Title -->
     <p class="text-sm text-gray-600 dark:text-gray-400 text-center mb-4">
-      Full Stack Developer
+      Web Developer
     </p>
 
     <!-- Contact Information (Desktop only) -->
@@ -39,7 +43,9 @@
         <span class="text-lg">📍</span>
         <div>
           <p class="text-xs text-gray-500 dark:text-gray-500">Location</p>
-          <p class="text-gray-900 dark:text-gray-100 text-xs">Seoul, South Korea</p>
+          <p class="text-gray-900 dark:text-gray-100 text-xs">
+            Seoul, South Korea
+          </p>
         </div>
       </div>
 
