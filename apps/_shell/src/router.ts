@@ -18,6 +18,11 @@ const routes: RouteRecordRaw[] = [
     component: () => import('blog/BlogShell'),
     props: { mode: 'federated', basePath: '/blog' },
   },
+  {
+    path: '/guestbook/:pathMatch(.*)*',
+    component: () => import('guestbook/GuestbookShell'),
+    props: { mode: 'federated', basePath: '/guestbook' },
+  },
 ];
 
 export default routes;

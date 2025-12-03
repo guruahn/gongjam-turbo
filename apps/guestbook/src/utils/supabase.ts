@@ -48,16 +48,6 @@ export async function createGuestbookEntry(formData: GuestbookFormData) {
   };
   console.log('Inserting guestbook entry:', body);
 
-  // const { data, error } = await supabase
-  //   .from('guestbook_entries')
-  //   .insert({
-  //     nickname: formData.nickname,
-  //     profile_image: profileImageUrl, // URL 전체 저장
-  //     message: formData.message,
-  //     status: 'pending', // 명시적으로 status 추가
-  //   })
-  //   .select()
-  //   .single();
   const response = await fetch(`${supabaseUrl}/rest/v1/guestbook_entries`, {
     method: 'POST',
     headers: {
@@ -127,24 +117,24 @@ export async function updateEntryStatus(
 
 // 관리자: 통계 조회
 export async function fetchGuestbookStats() {
-  const { data: pendingData } = await supabase
+  const { count: pendingCount } = await supabase
     .from('guestbook_entries')
-    .select('id', { count: 'exact', head: true })
+    .select('*', { count: 'exact', head: true })
     .eq('status', 'pending');
 
-  const { data: approvedData } = await supabase
+  const { count: approvedCount } = await supabase
     .from('guestbook_entries')
-    .select('id', { count: 'exact', head: true })
+    .select('*', { count: 'exact', head: true })
     .eq('status', 'approved');
 
-  const { data: rejectedData } = await supabase
+  const { count: rejectedCount } = await supabase
     .from('guestbook_entries')
-    .select('id', { count: 'exact', head: true })
+    .select('*', { count: 'exact', head: true })
     .eq('status', 'rejected');
 
   return {
-    pending: pendingData?.length || 0,
-    approved: approvedData?.length || 0,
-    rejected: rejectedData?.length || 0,
+    pending: pendingCount || 0,
+    approved: approvedCount || 0,
+    rejected: rejectedCount || 0,
   };
 }

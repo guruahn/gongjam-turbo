@@ -19,9 +19,16 @@ declare module 'blog/BlogShell' {
   export default component;
 }
 
+declare module 'guestbook/GuestbookShell' {
+  import type { DefineComponent } from 'vue';
+  const component: DefineComponent<object, object, unknown>;
+  export default component;
+}
+
 interface ImportMetaEnv {
   readonly VITE_HELLO_HOME_URL: string;
   readonly VITE_BLOG_URL: string;
+  readonly VITE_GUESTBOOK_URL: string;
 }
 
 interface ImportMeta {

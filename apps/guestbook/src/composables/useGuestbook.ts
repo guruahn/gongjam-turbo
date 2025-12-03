@@ -42,7 +42,8 @@ export function useGuestbook() {
 
       return result;
     } catch (e) {
-      error.value = e instanceof Error ? e.message : '방명록을 불러오는데 실패했습니다.';
+      error.value =
+        e instanceof Error ? e.message : '방명록을 불러오는데 실패했습니다.';
       throw e;
     } finally {
       loading.value = false;
@@ -67,7 +68,8 @@ export function useGuestbook() {
       const newEntry = await createGuestbookEntry(formData);
       return newEntry;
     } catch (e) {
-      error.value = e instanceof Error ? e.message : '방명록 작성에 실패했습니다.';
+      error.value =
+        e instanceof Error ? e.message : '방명록 작성에 실패했습니다.';
       throw e;
     } finally {
       loading.value = false;
@@ -119,7 +121,8 @@ export function useGuestbookAdmin() {
       entries.value = result;
       return result;
     } catch (e) {
-      error.value = e instanceof Error ? e.message : '방명록을 불러오는데 실패했습니다.';
+      error.value =
+        e instanceof Error ? e.message : '방명록을 불러오는데 실패했습니다.';
       throw e;
     } finally {
       loading.value = false;
@@ -130,10 +133,12 @@ export function useGuestbookAdmin() {
   async function fetchStats() {
     try {
       const result = await fetchGuestbookStats();
+      console.log('fetchStats result:', result);
       stats.value = result;
       return result;
     } catch (e) {
-      error.value = e instanceof Error ? e.message : '통계를 불러오는데 실패했습니다.';
+      error.value =
+        e instanceof Error ? e.message : '통계를 불러오는데 실패했습니다.';
       throw e;
     }
   }
@@ -150,11 +155,13 @@ export function useGuestbookAdmin() {
       entries.value = entries.value.filter(entry => entry.id !== entryId);
 
       // 통계 업데이트
+      await fetchAll();
       await fetchStats();
 
       return updatedEntry;
     } catch (e) {
-      error.value = e instanceof Error ? e.message : '상태 변경에 실패했습니다.';
+      error.value =
+        e instanceof Error ? e.message : '상태 변경에 실패했습니다.';
       throw e;
     } finally {
       loading.value = false;

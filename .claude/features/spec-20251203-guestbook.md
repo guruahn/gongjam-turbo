@@ -798,6 +798,7 @@ router.beforeEach(async (to, from, next) => {
 #### 3.3 GuestbookAdminPage 구현 (3시간)
 - **작업 내용**:
   - 대시보드 통계 (승인 대기, 승인 완료, 거부됨 개수)
+  - 디자인 스타일 (https://www.untitledui.com/react/components/dashboards/dashboard-18)
   - AdminPanel 통합
   - 필터링 (상태별)
   - 검색 기능 (선택적)

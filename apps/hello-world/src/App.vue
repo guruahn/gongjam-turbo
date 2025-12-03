@@ -14,8 +14,8 @@ import { portfolio } from './data/portfolio';
           우연한 기회로 IT 업계에 발을 들였고 💻<br />
           웹 기술로 세상을 바꿀 수 있다는 젊은 호기심 하나로 개발을
           시작했습니다.<br />
-          지금은 금융과 보험의 변화를 꿈꾸는 회사에서 하루하루 배우며 성장하고
-          있습니다.
+          지금도 금융과 보험의 변화를 꿈꾸는 회사에서 세상을 바꾸는 일을 도모
+          하고 있습니다.
         </p>
         <p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">
           아직은 스페셜리스트라 부르기엔 부족하지만, 꾸준히 나아가고 있습니다.
@@ -23,7 +23,7 @@ import { portfolio } from './data/portfolio';
           존경받는 시니어가 되는 길은 멀지만, 맡은 일엔 책임을 다하려고 합니다.
         </p>
         <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
-          비염 때문에 코가 막혀도 커피향은 절대 포기 못 하고 ☕<br />
+          자연을 좋아하는 캠퍼이지만 도시생활은 포기 못합니다. 🏕️<br />
           가끔은 허세 섞인 독서로 마음의 균형을 잡습니다. 📚
         </p>
       </div>

@@ -1,17 +1,26 @@
 <template>
-  <div :class="['shell-layout', 'min-h-screen', 'flex', 'flex-col', { 'dark': isDarkMode }]">
+  <div
+    :class="[
+      'shell-layout',
+      'min-h-screen',
+      'flex',
+      'flex-col',
+      { dark: isDarkMode },
+    ]"
+  >
     <!-- Navigation Bar -->
-    <header class="shell-header bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 sticky top-0 z-50">
+    <header
+      class="shell-header bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 sticky top-0 z-50"
+    >
       <nav class="container mx-auto max-w-screen-lg px-4 py-4">
         <div class="flex items-center justify-between">
           <!-- Logo -->
           <div class="flex items-center">
-            <router-link
-              to="/"
-              class="flex items-center"
-            >
+            <router-link to="/" class="flex items-center">
               <!-- Desktop: Text Logo -->
-              <span class="hidden md:block text-xl font-bold text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+              <span
+                class="hidden md:block text-xl font-bold text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+              >
                 Jeongwoo Ahn
               </span>
               <!-- Mobile: Profile Image -->
@@ -36,7 +45,7 @@
               Blog
             </router-link>
             <router-link
-              to="/guest-book"
+              to="/guestbook"
               class="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors font-medium"
               active-class="text-blue-600 dark:text-blue-400"
             >
@@ -115,7 +124,7 @@
           <aside
             :class="[
               'lg:col-span-1',
-              shouldShowProfileOnMobile ? 'block' : 'hidden lg:block'
+              shouldShowProfileOnMobile ? 'block' : 'hidden lg:block',
             ]"
           >
             <ProfileCard />
@@ -130,7 +139,9 @@
     </main>
 
     <!-- Footer -->
-    <footer class="shell-footer bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 py-8">
+    <footer
+      class="shell-footer bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 py-8"
+    >
       <div class="container mx-auto max-w-screen-lg px-4">
         <div class="flex flex-col items-center space-y-4">
           <!-- Social Links -->
@@ -203,7 +214,9 @@ const initializeDarkMode = (): void => {
     isDarkMode.value = savedTheme === 'dark';
   } else {
     // Check system preference
-    isDarkMode.value = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    isDarkMode.value = window.matchMedia(
+      '(prefers-color-scheme: dark)'
+    ).matches;
   }
   applyDarkMode();
 };
@@ -235,9 +248,12 @@ const closeMobileMenu = (): void => {
 };
 
 // Watch for route changes and close mobile menu
-watch(() => router.currentRoute.value.path, () => {
-  closeMobileMenu();
-});
+watch(
+  () => router.currentRoute.value.path,
+  () => {
+    closeMobileMenu();
+  }
+);
 
 // Initialize on mount
 onMounted(() => {

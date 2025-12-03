@@ -30,6 +30,15 @@ export default defineConfig(({ mode }) => {
             entryGlobalName: 'blog',
             shareScope: 'default',
           },
+          guestbook: {
+            type: 'module',
+            name: 'guestbook',
+            entry: !isDevelopment
+              ? `${env.VITE_GUESTBOOK_URL}/remoteEntry.js`
+              : 'http://localhost:3003/remoteEntry.js',
+            entryGlobalName: 'guestbook',
+            shareScope: 'default',
+          },
         },
         shared: {
           vue: {},
