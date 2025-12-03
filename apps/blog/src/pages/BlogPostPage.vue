@@ -186,7 +186,7 @@ const relatedPosts = computed(() => {
         The blog post you're looking for doesn't exist.
       </p>
       <router-link
-        to="/blog"
+        to="https://jeongwoo.in/blog"
         class="inline-block px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
       >
         Back to Blog
