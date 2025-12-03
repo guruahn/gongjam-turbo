@@ -1,0 +1,20 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Guestbook specific styles */
+.guestbook-card {
+  @apply bg-white dark:bg-gray-800 rounded-lg shadow-md p-4 transition-transform hover:scale-105;
+}
+
+.guestbook-form {
+  @apply bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6;
+}
+
+.profile-selector-item {
+  @apply cursor-pointer transition-transform hover:scale-110 rounded-full;
+}
+
+.profile-selector-item.selected {
+  @apply ring-4 ring-blue-500;
+}

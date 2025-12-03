@@ -1138,36 +1138,36 @@ test.describe('Guestbook', () => {
 
 
 ### 11.4 추천 프로필 목록 (30개)
-1. pig
-2. mouse
-3. sheep
-4. hippo
-5. clown-fish
-6. walrus
-7. lion
-8. parrot
-9. owl
-10. bullfinch
-11. crab
-12. panda
-13. whale
-14. ladybug
-15. frog
-16. giraffe
-17. beetle
-18. snake
-19. chicken
-20. spider
-21. penguin
-22. rabbit
-23. lama
-24. fox
-25. flamingo
-26. rhino
-27. dog
-28. beaver
-29. gorilla
-30. zebra
+1. pig : https://images.jeongwoo.in/profiles/pig.png
+2. mouse : https://images.jeongwoo.in/profiles/mouse.png
+3. sheep : https://images.jeongwoo.in/profiles/sheep.png
+4. hippo : https://images.jeongwoo.in/profiles/hippo.png
+5. clown-fish : https://images.jeongwoo.in/profiles/clown-fish.png
+6. walrus : https://images.jeongwoo.in/profiles/walrus.png
+7. lion : https://images.jeongwoo.in/profiles/lion.png
+8. parrot : https://images.jeongwoo.in/profiles/parrot.png
+9. owl : https://images.jeongwoo.in/profiles/owl.png
+10. bullfinch : https://images.jeongwoo.in/profiles/bullfinch.png
+11. crab : https://images.jeongwoo.in/profiles/crab.png
+12. panda : https://images.jeongwoo.in/profiles/panda.png
+13. whale : https://images.jeongwoo.in/profiles/whale.png
+14. ladybug : https://images.jeongwoo.in/profiles/ladybug.png
+15. frog : https://images.jeongwoo.in/profiles/frog.png
+16. giraffe : https://images.jeongwoo.in/profiles/giraffe.png
+17. beetle : https://images.jeongwoo.in/profiles/beetle.png
+18. snake : https://images.jeongwoo.in/profiles/snake.png
+19. chicken : https://images.jeongwoo.in/profiles/chicken.png
+20. spider : https://images.jeongwoo.in/profiles/spider.png
+21. penguin : https://images.jeongwoo.in/profiles/penguin.png
+22. rabbit : https://images.jeongwoo.in/profiles/rabbit.png
+23. lama : https://images.jeongwoo.in/profiles/lama.png
+24. fox : https://images.jeongwoo.in/profiles/fox.png
+25. flamingo : https://images.jeongwoo.in/profiles/flamingo.png
+26. rhino : https://images.jeongwoo.in/profiles/rhino.png
+27. dog : https://images.jeongwoo.in/profiles/dog.png
+28. beaver : https://images.jeongwoo.in/profiles/beaver.png
+29. gorilla : https://images.jeongwoo.in/profiles/gorilla.png
+30. zebra : https://images.jeongwoo.in/profiles/zebra.png
 
 ---
 

@@ -1,0 +1,21 @@
+{
+  "extends": "@gongjam/typescript-config/base.json",
+  "compilerOptions": {
+    "composite": false,
+    "jsx": "preserve",
+    "jsxImportSource": "vue",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+    "skipLibCheck": true,
+    "lib": ["ESNext", "DOM"],
+    "target": "ESNext",
+    "module": "ESNext",
+    "types": ["vite/client", "node"],
+    "resolveJsonModule": true,
+    "exactOptionalPropertyTypes": false
+  },
+  "include": ["src/**/*", "vite-env.d.ts"],
+  "exclude": ["node_modules", "dist"]
+}
