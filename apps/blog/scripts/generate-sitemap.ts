@@ -61,5 +61,6 @@ export async function generateSitemapString(): Promise<string> {
     Readable.from(links).pipe(stream)
   ).then(data => data.toString());
 
-  return xmlString;
+  // XML 선언 완전 제거 (R2 업로드 시 중복 방지)
+  return xmlString.replace(/<\?xml version="1\.0" encoding="UTF-8"\?>\s*/g, '');
 }

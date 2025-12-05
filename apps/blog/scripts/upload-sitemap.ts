@@ -4,9 +4,10 @@ import { config } from 'dotenv';
 import { generateSitemapString } from './generate-sitemap.js';
 
 // .env 파일 로드
-const envFile = process.env.NODE_ENV === 'production'
-  ? '.env.production'
-  : '.env.development';
+const envFile =
+  process.env.NODE_ENV === 'production'
+    ? '.env.production'
+    : '.env.development';
 config({ path: path.resolve(process.cwd(), envFile) });
 
 /**
@@ -81,7 +82,9 @@ async function uploadSitemapToR2(): Promise<void> {
       if (error.message.includes('credentials')) {
         console.error('💡 Hint: Check R2 credentials in .env file');
       } else if (error.message.includes('posts.json')) {
-        console.error('💡 Hint: Run "pnpm build:posts" first to generate posts.json');
+        console.error(
+          '💡 Hint: Run "pnpm build:posts" first to generate posts.json'
+        );
       }
     } else {
       console.error('❌ Unknown error:', error);
