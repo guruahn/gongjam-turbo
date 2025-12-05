@@ -5,9 +5,10 @@
   "private": true,
   "scripts": {
     "dev": "vite",
-    "build": "pnpm build:posts && vite build && pnpm build:sitemap",
+    "build": "pnpm build:posts && vite build && pnpm build:sitemap && pnpm upload:sitemap",
     "build:posts": "tsx scripts/build-posts.ts",
     "build:sitemap": "tsx scripts/generate-sitemap.ts",
+    "upload:sitemap": "tsx scripts/upload-sitemap.ts",
     "preview": "vite preview",
     "lint": "eslint .",
     "type-check": "vue-tsc --noEmit",
@@ -28,6 +29,8 @@
     "vue-router": "^4.4.5"
   },
   "devDependencies": {
+    "@aws-sdk/client-s3": "^3.705.0",
+    "dotenv": "^16.4.5",
     "@gongjam/eslint-config": "workspace:*",
     "@gongjam/typescript-config": "workspace:*",
     "@gongjam/vite-config": "workspace:*",

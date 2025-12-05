@@ -5,4 +5,4 @@ User-agent: *
 Allow: /
 
 # Sitemap location
-Sitemap: https://blog.jeongwoo.in/sitemap.xml
+Sitemap: https://jeongwoo.in/sitemap.xml
