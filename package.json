@@ -6,6 +6,7 @@
   "description": "Vue3 Monorepo Foundation for legacy Vue project migration",
   "scripts": {
     "build": "turbo run build",
+    "deploy:shell": "cd apps/_shell && wrangler pages deploy dist",
     "dev": "turbo run dev",
     "dev:shell": "pnpm --filter _shell dev",
     "dev:hello": "pnpm --filter hello-world dev",
