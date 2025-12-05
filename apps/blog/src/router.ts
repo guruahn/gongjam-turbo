@@ -9,15 +9,15 @@ const routes: RouteRecordRaw[] = [
     component: BlogListPage,
   },
   {
-    path: '/:slug',
-    name: 'BlogPost',
-    component: BlogPostPage,
-    props: true,
-  },
-  {
     path: '/tag/:tag',
     name: 'BlogTagFilter',
     component: BlogListPage,
+    props: true,
+  },
+  {
+    path: '/:slug',
+    name: 'BlogPost',
+    component: BlogPostPage,
     props: true,
   },
 ];

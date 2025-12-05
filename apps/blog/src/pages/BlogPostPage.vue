@@ -19,12 +19,7 @@ const { findBySlug, getRelatedPosts } = useBlogPosts();
 // 현재 포스트 찾기
 const currentPost = computed(() => findBySlug(props.slug));
 
-// 404 처리
-if (!currentPost.value) {
-  router.push('/blog');
-}
-
-// SEO 메타 태그 적용 (currentPost가 변경될 때마다)
+// SEO 메타 태그 적용 및 404 처리 (currentPost가 변경될 때마다)
 watch(
   currentPost,
   post => {
@@ -38,6 +33,9 @@ watch(
         date: post.frontmatter.date,
         tags: post.frontmatter.tags,
       });
+    } else if (post === null) {
+      // 포스트를 찾을 수 없는 경우 (undefined가 아닌 명시적 null)
+      router.push('/blog');
     }
   },
   { immediate: true }
@@ -82,7 +80,7 @@ const blogHomeUrl = (event: Event) => {
       <!-- 뒤로 가기 -->
       <div class="mb-8">
         <a
-          href="/"
+          href="/blog"
           @click="blogHomeUrl"
           class="inline-flex items-center text-blue-600 dark:text-blue-400 hover:underline"
         >
@@ -192,7 +190,7 @@ const blogHomeUrl = (event: Event) => {
       </p>
 
       <a
-        href="/"
+        href="/blog"
         @click="blogHomeUrl"
         class="inline-block px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
       >

@@ -31,7 +31,7 @@ export function bootstrap(options: BootstrapOptions = {}) {
   const router = createRouter({
     history:
       mode === 'federated'
-        ? createMemoryHistory(basePath)
+        ? createMemoryHistory()
         : createWebHistory(),
     routes,
   });
@@ -48,7 +48,7 @@ export function bootstrap(options: BootstrapOptions = {}) {
 
     // 현재 브라우저 URL로 초기 라우팅
     const currentPath = window.location.pathname.replace(basePath, '') || '/';
-    router.push(currentPath);
+    router.isReady().then(() => router.push(currentPath));
   }
 
   // Vue 앱 생성
