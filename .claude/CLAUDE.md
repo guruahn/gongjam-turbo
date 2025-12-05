@@ -39,6 +39,27 @@ gongjam-www/
 │   │   ├── server/                  # 포트: 3001
 │   │   └── ...
 │   │
+│   ├── guestbook/                    # Module Federation Remote 앱 (방명록)
+│   │   ├── src/
+│   │   │   ├── App.vue              # 방명록 앱 메인
+│   │   │   ├── GuestbookShell.vue   # 방명록 셸 컴포넌트
+│   │   │   ├── router.ts            # 방명록 라우터
+│   │   │   ├── pages/
+│   │   │   │   ├── GuestbookListPage.vue # 방명록 목록 페이지
+│   │   │   │   ├── LoginPage.vue         # 로그인 페이지
+│   │   │   │   └── GuestbookAdminPage.vue # 관리자 페이지
+│   │   │   └── components/
+│   │   │       ├── GuestbookCard.vue     # 방명록 카드
+│   │   │       ├── GuestbookForm.vue     # 방명록 작성 폼
+│   │   │       ├── ProfileSelector.vue   # 프로필 선택
+│   │   │       ├── LoginForm.vue         # 로그인 폼
+│   │   │       ├── AdminPanel.vue        # 관리자 패널
+│   │   │       └── InfiniteScroll.vue    # 무한 스크롤
+│   │   ├── vite.config.ts           # Module Federation Remote 설정
+│   │   ├── .env.development
+│   │   ├── .env.production
+│   │   └── ...
+│   │
 │   └── blog/                         # Module Federation Remote 앱 (블로그)
 │       ├── src/
 │       │   ├── App.vue              # 블로그 앱 메인
@@ -65,7 +86,8 @@ gongjam-www/
 │       ├── posts/                   # 블로그 마크다운 파일
 │       ├── scripts/
 │       │   ├── build-posts.ts       # 포스트 빌드 스크립트
-│       │   └── generate-sitemap.ts  # 사이트맵 생성 스크립트
+│       │   ├── generate-sitemap.ts  # 사이트맵 생성 스크립트
+│       │   └── upload-sitemap.ts    # 사이트맵 R2 업로드 스크립트
 │       ├── vite.config.ts           # Module Federation Remote 설정
 │       ├── .env.development
 │       ├── .env.production
@@ -138,6 +160,18 @@ gongjam-www/
 │  - Independent Runtime ✓                │
 │  - Shared: vue, vue-router              │
 │  - Features: 마크다운 블로그, Tailwind   │
+└─────────────────────────────────────────┘
+          ↓ (Module Federation)
+          ↓ remoteEntry.js
+┌─────────────────────────────────────────┐
+│    apps/guestbook (Remote App)          │
+│    Port: 3003                           │
+│  - Exposes: ./GuestbookShell,           │
+│    ./GuestbookListPage, ./LoginPage,    │
+│    ./GuestbookAdminPage                 │
+│  - Independent Runtime ✓                │
+│  - Shared: vue, vue-router              │
+│  - Features: 방명록, 관리자 패널        │
 └─────────────────────────────────────────┘
 ```
 
@@ -281,8 +315,9 @@ pnpm --filter _shell build
 pnpm --filter hello-world build
 pnpm --filter blog build
 
-# 블로그 사이트맵 생성
-pnpm --filter blog build:sitemap
+# 블로그 사이트맵 생성 및 업로드
+pnpm --filter blog build:sitemap     # 사이트맵 생성
+pnpm --filter blog upload:sitemap    # 사이트맵 R2 업로드
 
 # 이미지 업로드 (Cloudflare R2)
 pnpm upload:image
@@ -292,6 +327,7 @@ pnpm upload:image
 - **Shell (Host)**: `https://jeongwoo.in/`
   - 홈: `/`, `/hello`, `/home`
   - 블로그: `/blog/*`
+  - 방명록: `/guestbook`
 - **hello-world (Remote)**: `https://hello.jeongwoo.in/hello-world/assets/remoteEntry.js`
 - **blog (Remote)**: `https://blog.jeongwoo.in/remoteEntry.js`
 
@@ -304,7 +340,7 @@ pnpm upload:image
 ### blog 앱
 - 마크다운 기반 블로그 시스템
 - Tailwind CSS + @tailwindcss/typography를 이용한 스타일링
-- Shiki를 이용한 코드 하이라이팅
+- Prism.js를 이용한 코드 하이라이팅 (이전: Shiki)
 - 주요 페이지:
   - 블로그 목록 (`/blog`)
   - 블로그 게시글 (`/blog/posts/:slug`)
@@ -314,8 +350,22 @@ pnpm upload:image
   - 읽기 시간 계산
   - 태그 필터링
   - SEO 최적화
-  - 사이트맵 자동 생성
+  - 사이트맵 자동 생성 및 Cloudflare R2 업로드
 - 블로그 게시글은 `posts/` 디렉토리에 마크다운 파일로 저장
+
+### guestbook 앱
+- 방명록 시스템 (방문자 메시지 작성)
+- Tailwind CSS를 이용한 스타일링
+- 주요 페이지:
+  - 방명록 목록 (`/guestbook`)
+  - 로그인 (`/guestbook/login`)
+  - 관리자 페이지 (`/guestbook/admin`)
+- 주요 기능:
+  - 방명록 작성 및 목록 조회
+  - 프로필 이미지 선택
+  - 무한 스크롤
+  - 관리자 인증 및 메시지 관리
+  - Cloudflare D1 데이터베이스 연동
 
 ## 테스트
 
@@ -353,13 +403,18 @@ pnpm format:check
 
 ## 향후 확장 계획
 - [x] 홈 화면의 더미내용을 실제로 변경
-- [x] 블로그의 태그 기능 완성
-- [ ] 파비콘 만들기
+- [x] 파비콘 만들기
+- [x] 게스트북 (방명록) 페이지 추가
+- [x] 사이트맵 자동 업로드 (Cloudflare R2)
+- [x] 다크모드 지원
+- [x] 사이트맵 검색엔진 제출
 - [ ] 블로그의 좋아요 기능 추가
 - [ ] 블로그 검색 기능 추가
-- [ ] 게스트북 (방명록) 페이지 추가
-- [x] 다크모드 지원
-- [ ] 사이트맵 제출
+- [ ] 블로그의 태그 기능 완성
+- [ ] 블로그의 관련글 기능 추가
+
+### 블로그 글 계획
+- 
 
 ## 주요 의존성
 
@@ -372,10 +427,18 @@ pnpm format:check
 
 ### Blog 앱 전용
 - **markdown-it**: 14.1.0 (마크다운 파싱)
-- **shiki**: 1.22.0 (코드 하이라이팅)
+- **prismjs**: 1.30.0 (코드 하이라이팅)
+- **markdown-it-prism**: 3.0.1 (마크다운 코드 하이라이팅 플러그인)
 - **gray-matter**: 4.0.3 (frontmatter 파싱)
 - **date-fns**: 4.1.0 (날짜 포맷팅)
 - **reading-time**: 1.5.0 (읽기 시간 계산)
+- **@aws-sdk/client-s3**: 3.x (Cloudflare R2 업로드)
 
-**최종 업데이트**: 2025-11-14
+### Guestbook 앱 전용
+- **date-fns**: 4.1.0 (날짜 포맷팅)
+
+### 추가 도구
+- **sharp**: 0.34.5 (이미지 처리 - 파비콘 생성)
+
+**최종 업데이트**: 2025-12-06
 **작성자**: Claude Code

@@ -65,9 +65,11 @@ const relatedPosts = computed(() => {
  */
 const blogHomeUrl = (event: Event) => {
   if (window.location.hostname === 'blog.jeongwoo.in') {
-    event.preventDefault();
-    router.replace('https://jeongwoo.in/blog');
+    window.location.href = 'https://jeongwoo.in/blog';
+  } else {
+    router.push('/');
   }
+  event.preventDefault();
 };
 </script>
 
