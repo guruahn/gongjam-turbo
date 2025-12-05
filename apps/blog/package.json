@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "dev": "vite",
-    "build": "pnpm build:posts && vite build && pnpm build:sitemap && pnpm upload:sitemap",
+    "build": "pnpm build:posts && vite build && pnpm upload:sitemap",
     "build:posts": "tsx scripts/build-posts.ts",
     "build:sitemap": "tsx scripts/generate-sitemap.ts",
     "upload:sitemap": "tsx scripts/upload-sitemap.ts",

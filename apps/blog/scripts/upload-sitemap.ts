@@ -1,15 +1,13 @@
-import fs from 'fs/promises';
 import path from 'path';
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 import { config } from 'dotenv';
+import { generateSitemapString } from './generate-sitemap.js';
 
 // .env 파일 로드
 const envFile = process.env.NODE_ENV === 'production'
   ? '.env.production'
   : '.env.development';
 config({ path: path.resolve(process.cwd(), envFile) });
-
-const SITEMAP_FILE = path.resolve(process.cwd(), 'public/sitemap.xml');
 
 /**
  * R2 클라이언트 생성
@@ -45,9 +43,10 @@ async function uploadSitemapToR2(): Promise<void> {
   console.log('📤 Uploading sitemap to Cloudflare R2...\n');
 
   try {
-    // 사이트맵 파일 읽기
-    const sitemapContent = await fs.readFile(SITEMAP_FILE, 'utf-8');
-    console.log(`📁 Reading sitemap from: ${SITEMAP_FILE}`);
+    // 사이트맵 XML 문자열 생성
+    console.log('🗺️  Generating sitemap XML...');
+    const sitemapContent = await generateSitemapString();
+    console.log('✅ Sitemap XML generated successfully');
 
     // R2 설정
     const bucketName = process.env.VITE_R2_BUCKET_NAME || 'blog';
@@ -76,12 +75,10 @@ async function uploadSitemapToR2(): Promise<void> {
       console.error('❌ Error uploading sitemap:', error.message);
 
       // 상세 에러 정보 제공
-      if (error.message.includes('ENOENT')) {
-        console.error(
-          '💡 Hint: Run "pnpm build:sitemap" first to generate sitemap.xml'
-        );
-      } else if (error.message.includes('credentials')) {
+      if (error.message.includes('credentials')) {
         console.error('💡 Hint: Check R2 credentials in .env file');
+      } else if (error.message.includes('posts.json')) {
+        console.error('💡 Hint: Run "pnpm build:posts" first to generate posts.json');
       }
     } else {
       console.error('❌ Unknown error:', error);
