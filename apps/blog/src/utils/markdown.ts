@@ -1,39 +1,24 @@
 import MarkdownIt from 'markdown-it';
 import markdownItAnchor from 'markdown-it-anchor';
 import markdownItAttrs from 'markdown-it-attrs';
-import { getHighlighter, type Highlighter } from 'shiki';
+import Prism from 'prismjs';
 
-let highlighterInstance: Highlighter | null = null;
-
-/**
- * Shiki Highlighter 초기화 (싱글톤)
- */
-async function getHighlighterInstance(): Promise<Highlighter> {
-  if (!highlighterInstance) {
-    highlighterInstance = await getHighlighter({
-      themes: ['github-dark', 'github-light'],
-      langs: [
-        'typescript',
-        'javascript',
-        'vue',
-        'json',
-        'bash',
-        'css',
-        'html',
-        'markdown',
-        'yaml',
-      ],
-    });
-  }
-  return highlighterInstance;
-}
+// Prism 언어 로드
+import 'prismjs/components/prism-typescript';
+import 'prismjs/components/prism-javascript';
+import 'prismjs/components/prism-jsx';
+import 'prismjs/components/prism-tsx';
+import 'prismjs/components/prism-json';
+import 'prismjs/components/prism-bash';
+import 'prismjs/components/prism-css';
+import 'prismjs/components/prism-markup'; // HTML
+import 'prismjs/components/prism-markdown';
+import 'prismjs/components/prism-yaml';
 
 /**
- * markdown-it 인스턴스 생성 (Shiki 코드 하이라이팅 포함)
+ * markdown-it 인스턴스 생성 (Prism 코드 하이라이팅 포함)
  */
 export async function createMarkdownRenderer(): Promise<MarkdownIt> {
-  const highlighter = await getHighlighterInstance();
-
   const md: MarkdownIt = new MarkdownIt({
     html: true, // HTML 태그 허용
     linkify: true, // URL 자동 링크
@@ -44,28 +29,16 @@ export async function createMarkdownRenderer(): Promise<MarkdownIt> {
       }
 
       try {
-        // 다크모드와 라이트모드 모두 지원
-        const darkHtml = highlighter.codeToHtml(code, {
-          lang,
-          theme: 'github-dark',
-        });
-        const lightHtml = highlighter.codeToHtml(code, {
-          lang,
-          theme: 'github-light',
-        });
-
-        // 다크모드 클래스로 구분
-        return `
-          <div class="shiki-container">
-            <div class="shiki-light hidden dark:hidden">${lightHtml}</div>
-            <div class="shiki-dark hidden dark:block">${darkHtml}</div>
-          </div>
-        `;
+        // Prism으로 하이라이팅
+        const grammar = Prism.languages[lang];
+        if (grammar) {
+          const highlighted = Prism.highlight(code, grammar, lang);
+          return `<pre class="language-${lang}"><code class="language-${lang}">${highlighted}</code></pre>`;
+        }
+        return `<pre class="language-${lang}"><code class="language-${lang}">${md.utils.escapeHtml(code)}</code></pre>`;
       } catch (error) {
         console.error(`Failed to highlight code for lang: ${lang}`, error);
-        return `<pre><code class="language-${lang}">${md.utils.escapeHtml(
-          code
-        )}</code></pre>`;
+        return `<pre class="language-${lang}"><code class="language-${lang}">${md.utils.escapeHtml(code)}</code></pre>`;
       }
     },
   });

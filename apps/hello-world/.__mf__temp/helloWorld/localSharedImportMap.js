@@ -14,7 +14,7 @@
       
           "vue": {
             name: "vue",
-            version: "3.5.22",
+            version: "3.5.25",
             scope: ["default"],
             loaded: false,
             from: "helloWorld",
@@ -37,7 +37,7 @@
             },
             shareConfig: {
               singleton: false,
-              requiredVersion: "^3.5.22",
+              requiredVersion: "^3.5.25",
               
             }
           }

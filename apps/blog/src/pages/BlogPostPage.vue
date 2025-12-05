@@ -65,12 +65,11 @@ const relatedPosts = computed(() => {
  * blog.jeongwoo.in/* 으로 진입한 경우, jeongwoo.in/blog로 리다이렉트
  * 이 외의 경우는 '/'로 라우팅.
  */
-const blogHomeUrl = (_to: any, _from: any, next: any) => {
+const blogHomeUrl = (event: Event) => {
   if (window.location.hostname === 'blog.jeongwoo.in') {
-    window.location.href = 'https://jeongwoo.in/blog';
-    return next(false);
+    event.preventDefault();
+    router.replace('https://jeongwoo.in/blog');
   }
-  return next('/');
 };
 </script>
 
@@ -82,9 +81,9 @@ const blogHomeUrl = (_to: any, _from: any, next: any) => {
     <div class="max-w-7xl mx-auto">
       <!-- 뒤로 가기 -->
       <div class="mb-8">
-        <router-link
-          to="/"
-          :before-enter="blogHomeUrl"
+        <a
+          href="/"
+          @click="blogHomeUrl"
           class="inline-flex items-center text-blue-600 dark:text-blue-400 hover:underline"
         >
           <svg
@@ -101,13 +100,13 @@ const blogHomeUrl = (_to: any, _from: any, next: any) => {
             />
           </svg>
           Back to Blog
-        </router-link>
+        </a>
       </div>
 
       <!-- 2열 레이아웃 (Desktop) -->
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
-        <!-- 메인 콘텐츠 (왼쪽, 8/12) -->
-        <div class="lg:col-span-8">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <!-- 메인 콘텐츠 (왼쪽, 9/12) - Shell 레이아웃을 고려하여 더 넓게 -->
+        <div class="lg:col-span-12">
           <!-- 헤더 -->
           <header class="mb-8">
             <h1
@@ -178,13 +177,6 @@ const blogHomeUrl = (_to: any, _from: any, next: any) => {
             </div>
           </div>
         </div>
-
-        <!-- 사이드바 (오른쪽, 4/12) - Desktop only -->
-        <aside class="hidden lg:block lg:col-span-4">
-          <div class="sticky top-24">
-            <BlogTOC :toc="currentPost.toc" />
-          </div>
-        </aside>
       </div>
     </div>
   </div>
@@ -199,13 +191,13 @@ const blogHomeUrl = (_to: any, _from: any, next: any) => {
         The blog post you're looking for doesn't exist.
       </p>
 
-      <router-link
-        to="/"
-        :before-enter="blogHomeUrl"
+      <a
+        href="/"
+        @click="blogHomeUrl"
         class="inline-block px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
       >
         Back to Blog
-      </router-link>
+      </a>
     </div>
   </div>
 </template>

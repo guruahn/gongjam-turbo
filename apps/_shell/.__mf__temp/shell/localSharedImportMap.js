@@ -19,7 +19,7 @@
       
           "vue": {
             name: "vue",
-            version: "3.5.22",
+            version: "3.5.25",
             scope: ["default"],
             loaded: false,
             from: "shell",
@@ -42,14 +42,14 @@
             },
             shareConfig: {
               singleton: false,
-              requiredVersion: "^3.5.22",
+              requiredVersion: "^3.5.25",
               
             }
           }
         ,
           "vue-router": {
             name: "vue-router",
-            version: "4.6.0",
+            version: "4.6.3",
             scope: ["default"],
             loaded: false,
             from: "shell",
@@ -72,7 +72,7 @@
             },
             shareConfig: {
               singleton: false,
-              requiredVersion: "^4.6.0",
+              requiredVersion: "^4.6.3",
               
             }
           }
