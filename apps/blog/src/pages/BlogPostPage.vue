@@ -60,6 +60,18 @@ const relatedPosts = computed(() => {
   if (!currentPost.value) return [];
   return getRelatedPosts(currentPost.value, 3);
 });
+
+/**
+ * blog.jeongwoo.in/* 으로 진입한 경우, jeongwoo.in/blog로 리다이렉트
+ * 이 외의 경우는 '/'로 라우팅.
+ */
+const blogHomeUrl = (_to: any, _from: any, next: any) => {
+  if (window.location.hostname === 'blog.jeongwoo.in') {
+    window.location.href = 'https://jeongwoo.in/blog';
+    return next(false);
+  }
+  return next('/');
+};
 </script>
 
 <template>
@@ -72,6 +84,7 @@ const relatedPosts = computed(() => {
       <div class="mb-8">
         <router-link
           to="/"
+          :before-enter="blogHomeUrl"
           class="inline-flex items-center text-blue-600 dark:text-blue-400 hover:underline"
         >
           <svg
@@ -185,8 +198,10 @@ const relatedPosts = computed(() => {
       <p class="text-xl text-gray-600 dark:text-gray-400 mb-8">
         The blog post you're looking for doesn't exist.
       </p>
+
       <router-link
-        to="https://jeongwoo.in/blog"
+        to="/"
+        :before-enter="blogHomeUrl"
         class="inline-block px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
       >
         Back to Blog
