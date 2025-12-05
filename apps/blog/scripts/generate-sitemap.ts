@@ -68,6 +68,13 @@ async function generateSitemap(): Promise<void> {
     // public 디렉토리 생성 (없으면)
     await fs.mkdir(OUTPUT_DIR, { recursive: true });
 
+    // 기존 sitemap.xml 삭제 (중복 방지)
+    try {
+      await fs.unlink(OUTPUT_FILE);
+    } catch {
+      // 파일이 없으면 무시
+    }
+
     // sitemap.xml 저장
     await fs.writeFile(OUTPUT_FILE, xmlString, 'utf-8');
 

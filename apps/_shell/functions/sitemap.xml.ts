@@ -27,15 +27,13 @@ export async function onRequestGet(context: {
     }
 
     // R2 객체를 Response로 변환
-    const headers = new Headers();
-    object.writeHttpMetadata(headers);
-    headers.set('Content-Type', 'application/xml');
-    headers.set('Cache-Control', 'max-age=3600'); // 1시간 캐싱
-    headers.set('X-Content-Source', 'cloudflare-r2');
-
     return new Response(object.body, {
       status: 200,
-      headers,
+      headers: {
+        'Content-Type': 'application/xml; charset=utf-8',
+        'Cache-Control': 'public, max-age=3600', // 1시간 캐싱
+        'X-Content-Source': 'cloudflare-r2',
+      },
     });
   } catch (error) {
     console.error('Error serving sitemap:', error);
