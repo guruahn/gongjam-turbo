@@ -16,10 +16,7 @@ export interface MountOptions {
   basePath?: string;
 }
 
-export function mount(
-  el: HTMLElement | string,
-  options: MountOptions = {}
-) {
+export function mount(el: HTMLElement | string, options: MountOptions = {}) {
   const { basePath = '/guestbook' } = options;
 
   // Federated 모드로 간주 (MemoryHistory 사용)
@@ -56,7 +53,7 @@ export function mount(
   });
 
   // 라우터 네비게이션 발생 시 브라우저 URL 업데이트
-  router.afterEach((to) => {
+  router.afterEach(to => {
     const fullPath = basePath + to.fullPath;
     if (window.location.pathname !== fullPath) {
       window.history.pushState({}, '', fullPath);
@@ -65,7 +62,7 @@ export function mount(
 
   // 현재 브라우저 URL로 초기 라우팅
   const currentPath = window.location.pathname.replace(basePath, '') || '/';
-  router.push(currentPath);
+  router.isReady().then(() => router.push(currentPath));
 
   // Vue 앱 생성
   const app = createApp(App);
