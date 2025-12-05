@@ -21,6 +21,7 @@ async function getHighlighterInstance(): Promise<Highlighter> {
         'css',
         'html',
         'markdown',
+        'yaml',
       ],
     });
   }

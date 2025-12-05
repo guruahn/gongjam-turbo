@@ -54,13 +54,16 @@ async function uploadSitemapToR2(): Promise<void> {
 
     console.log(`☁️  Uploading to R2 bucket: ${bucketName}`);
 
-    // R2에 업로드
+    // R2에 업로드 (캐시 무효화를 위해 no-cache 설정)
     const command = new PutObjectCommand({
       Bucket: bucketName,
       Key: 'sitemap.xml',
       Body: sitemapContent,
       ContentType: 'application/xml',
-      CacheControl: 'max-age=3600', // 1시간 캐싱
+      CacheControl: 'no-cache, no-store, must-revalidate', // 캐시 비활성화
+      Metadata: {
+        'last-updated': new Date().toISOString(),
+      },
     });
 
     await r2Client.send(command);
