@@ -104,7 +104,7 @@
               Blog
             </router-link>
             <router-link
-              to="/guest-book"
+              to="/guestbook"
               class="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors font-medium"
               active-class="text-blue-600 dark:text-blue-400"
               @click="closeMobileMenu"

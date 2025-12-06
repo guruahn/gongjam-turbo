@@ -137,7 +137,7 @@
 ### 네비게이션 메뉴 구성
 - **Hello**: `/hello` (hello-world 앱)
 - **Blog**: `/blog` (미구현, 준비 중 표시 또는 비활성화)
-- **GuestBook**: `/guest-book` (미구현, 준비 중 표시 또는 비활성화)
+- **GuestBook**: `/guestbook` (미구현, 준비 중 표시 또는 비활성화)
 
 ### 라우팅 설정 (apps/_shell/src/router.ts)
 ```typescript
@@ -154,7 +154,7 @@ const routes: RouteRecordRaw[] = [
     path: '/home',  // ← 추가
     component: () => import('helloWorld/App'),
   },
-  // 미래: /blog, /guest-book
+  // 미래: /blog, /guestbook
 ];
 ```
 
@@ -241,7 +241,7 @@ const routes: RouteRecordRaw[] = [
      * 메뉴 (중앙/우측): Hello, Blog, GuestBook
      * 다크모드 토글 버튼 (우측, moon/sun 아이콘)
      * 모바일: 햄버거 메뉴로 변환
-     * router-link 사용 (`to="/hello"`, `to="/blog"`, `to="/guest-book"`)
+     * router-link 사용 (`to="/hello"`, `to="/blog"`, `to="/guestbook"`)
 
    - **다크모드 로직**:
      * `ref<boolean>` 상태로 다크모드 추적
