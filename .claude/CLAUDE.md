@@ -408,17 +408,24 @@ pnpm format:check
 - [x] 사이트맵 자동 업로드 (Cloudflare R2)
 - [x] 다크모드 지원
 - [x] 사이트맵 검색엔진 제출
+- [ ] 방문자 통계 프로그램설치(https://plausible.io/)
 - [ ] 블로그의 좋아요 기능 추가
+- [ ] 블로그의 view count 기능 추가
 - [ ] 블로그 검색 기능 추가
 - [ ] 블로그의 태그 기능 완성
 - [ ] 블로그의 관련글 기능 추가
 
 ### 블로그 글 계획
-- [ ] 블로그 구축기 #1 : 아키텍처
+- [x] 블로그 구축기 #1 : 아키텍처
 - [ ] 블로그 구축기 #2 : CSR프로젝트의 사이트맵 제출 with cloudflare
 - [ ] 블로그 구축기 #3 : 방명록 만들기 with supabase
 - [ ] 블로그 구축기 #4 : 회고
 - [ ] 2025년 회고
+- 구블로그 글옮기기
+  - [ ] Vue3 컴포넌트 번들링 하기(https://medium.com/@jeongwooahn/vue3-%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8-%EB%B2%88%EB%93%A4%EB%A7%81-%ED%95%98%EA%B8%B0-705ef83365d3)
+  - [ ] 나의 인생 매니페스토(https://medium.com/@jeongwooahn/%EB%82%98%EC%9D%98-%EC%9D%B8%EC%83%9D-%EB%A7%A4%EB%8B%88%ED%8E%98%EC%8A%A4%ED%86%A0-f600675be57)
+  - [ ] Signals 와 Vue(https://medium.com/@jeongwooahn/signals-%EC%99%80-vue-0f35299d0199)
+ 
 
 ## 주요 의존성
 
