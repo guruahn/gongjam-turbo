@@ -20,6 +20,8 @@ pre[class*='language-'] {
   border-radius: 0.5rem;
   margin: 0.5rem 0 !important;
   padding: 1rem !important;
+  background: #242424;
+  border: 1px solid #8f8c8c;
 }
 
 code[class*='language-'] {
@@ -32,13 +34,7 @@ code[class*='language-'] {
   text-shadow: none !important;
 }
 
-/* 다크모드 Prism 테마 자동 전환 */
-@media (prefers-color-scheme: dark) {
-  pre[class*='language-'] {
-    background: #1e1e1e !important;
-  }
-
-  code[class*='language-'] {
-    color: #d4d4d4 !important;
-  }
+/* operator 토큰 배경 제거 */
+.token.operator {
+  background: none !important;
 }

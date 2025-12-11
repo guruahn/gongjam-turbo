@@ -5,7 +5,11 @@ import matter from 'gray-matter';
 import { renderMarkdown } from '../src/utils/markdown';
 import { generateTOC } from '../src/utils/toc';
 import { calculateReadingTime } from '../src/utils/readingTime';
-import type { BlogPost, BlogPostFrontmatter, BlogMetadata } from '../src/types/blog';
+import type {
+  BlogPost,
+  BlogPostFrontmatter,
+  BlogMetadata,
+} from '../src/types/blog';
 
 const POSTS_DIR = path.resolve(process.cwd(), 'posts');
 const OUTPUT_DIR = path.resolve(process.cwd(), 'src/generated');
@@ -22,8 +26,10 @@ async function processMarkdownFile(filePath: string): Promise<BlogPost | null> {
     // Frontmatter 검증
     const frontmatter = data as BlogPostFrontmatter;
 
-    if (!frontmatter.title || !frontmatter.date || !frontmatter.description) {
-      console.warn(`⚠️  Skipping ${filePath}: Missing required frontmatter fields`);
+    if (!frontmatter.title || !frontmatter.date) {
+      console.warn(
+        `⚠️  Skipping ${filePath}: Missing required frontmatter fields`
+      );
       return null;
     }
 
@@ -102,8 +108,8 @@ async function buildPosts(): Promise<void> {
 
   // 모든 태그 추출
   const tagsSet = new Set<string>();
-  posts.forEach((post) => {
-    post.frontmatter.tags.forEach((tag) => tagsSet.add(tag));
+  posts.forEach(post => {
+    post.frontmatter.tags.forEach(tag => tagsSet.add(tag));
   });
   const tags = Array.from(tagsSet).sort();
 
@@ -128,7 +134,7 @@ async function buildPosts(): Promise<void> {
 }
 
 // 스크립트 실행
-buildPosts().catch((error) => {
+buildPosts().catch(error => {
   console.error('❌ Build failed:', error);
   process.exit(1);
 });
