@@ -1,0 +1,23 @@
+{
+  "name": "bookly-ocr-api",
+  "version": "1.0.0",
+  "description": "Cloudflare Workers API for Google Vision OCR",
+  "main": "src/index.ts",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "test": "vitest"
+  },
+  "keywords": ["cloudflare", "workers", "ocr", "google-vision"],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20241127.0",
+    "typescript": "^5.6.3",
+    "vitest": "^3.2.4",
+    "wrangler": "^3.95.0"
+  },
+  "dependencies": {
+    "@google-cloud/vision": "^4.3.2"
+  }
+}

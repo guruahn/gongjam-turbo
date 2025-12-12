@@ -1,0 +1,9 @@
+name = "bookly-ocr-api"
+main = "src/index.ts"
+compatibility_date = "2024-12-12"
+
+[env.production]
+name = "bookly-ocr-api"
+
+[env.development]
+name = "bookly-ocr-api-dev"
